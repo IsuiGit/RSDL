@@ -17,13 +17,17 @@ pub type SDL_PollEvent = unsafe extern "C" fn(*mut SDL_Event) -> bool;
 
 // SDL3 Create types-------------------------------------------------------------------------------
 // SDL3_CreateWindow type
-pub type SDL_CreateWindow = unsafe extern "C" fn(*const i8, u32, u32, u32) -> *mut c_void;
+pub type SDL_CreateWindow = unsafe extern "C" fn(*const i8, u32, u32, u64) -> *mut c_void;
 // SDL3_DestroyWindow type
 pub type SDL_DestroyWindow = unsafe extern "C" fn(*mut c_void);
 // SDL3_CreateRenderer
 pub type SDL_CreateRenderer = unsafe extern "C" fn(*mut c_void, *const c_char) -> *mut c_void;
 // SDL3_DestroyRenderer
 pub type SDL_DestroyRenderer = unsafe extern "C" fn(*mut c_void);
+// ------------------------------------------------------------------------------------------------
+
+// SDL3 Get types----------------------------------------------------------------------------------
+pub type SDL_GetWindowSize = unsafe extern "C" fn(*mut c_void, *mut i32, *mut i32) -> bool;
 // ------------------------------------------------------------------------------------------------
 
 // SDL3 Render types-------------------------------------------------------------------------------

@@ -3,7 +3,7 @@ use std::{
     mem::ManuallyDrop,
     ptr::drop_in_place,
     os::raw::c_char,
-    ffi::{CStr, c_void}
+    ffi::c_void
 };
 // SDL3 EVENT UNION--------------------------------------------------------------------------------
 #[repr(C)]
@@ -57,6 +57,7 @@ impl Debug for SDL_Event {
             let window = &self.window.windowID;
             let kdevice = &self.kdevice.which;
             let key = &self.key.key;
+            let mod_ = &self.key.mod_;
             let mdevice = &self.mdevice.which;
             let motion = &self.motion.state;
             let button = &self.button.button;
@@ -65,8 +66,8 @@ impl Debug for SDL_Event {
             let user = &self.user.code;
             write!(
                 f,
-                "SDL_Event {{ \ntype_: {},\ncommon: {},\ndisplay: {},\nwindow: {},\nkdevice: {},\nkey: {},\nmdevice: {}\nmotion: {},\nbutton: {},\nwheel: {}, \nquit: {},\nuser: {} }}\n",
-                self.type_, *common, *display, *window, *kdevice, *key, *mdevice, *motion, *button, *wheel, *quit, *user
+                "SDL_Event {{ \ntype_: {},\ncommon: {},\ndisplay: {},\nwindow: {},\nkdevice: {},\nkey: {}+{},\nmdevice: {}\nmotion: {},\nbutton: {},\nwheel: {}, \nquit: {},\nuser: {} }}\n",
+                self.type_, *common, *display, *window, *kdevice, *key, *mod_, *mdevice, *motion, *button, *wheel, *quit, *user
             )
         }
     }
@@ -170,7 +171,7 @@ pub struct SDL_KeyboardEvent{
     pub which: u32,
     pub scancode: u32,
     pub key: u32,
-    pub mod_: u32,
+    pub mod_: u16,
     pub raw: u16,
     pub down: bool,
     pub repeat: bool,
