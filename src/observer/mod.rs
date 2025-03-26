@@ -1,19 +1,13 @@
 use crate::collider::Collider;
+use std::collections::HashSet;
 
 mod observer_sys;
-mod observer_collision;
+mod observer_events;
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct Observer{
+    pub playable: Collider,
     pub objects: Vec<Collider>,
     pub window: [f32; 2],
-}
-
-impl Observer{
-    pub fn init(obj: Vec<Collider>, win: [f32; 2]) -> Self{
-        Observer{
-            objects: obj,
-            window: win,
-        }
-    }
+    pub events: HashSet<u32>,
 }
