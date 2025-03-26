@@ -9,7 +9,7 @@ pub enum Direction {
 }
 
 impl Collider {
-
+    // Рэйкастинг по направлению движения для определения расстояния до объекта
     pub fn ray_cast(&self, object: &Collider, direction: Direction) -> f32 {
         match direction {
             Direction::Left => {

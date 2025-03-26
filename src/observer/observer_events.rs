@@ -13,8 +13,7 @@ impl Observer {
             true => {
                 let mut m_left = true;
                 for obj in &objects{
-                    let mut ray = self.playable.ray_cast(obj, Direction::Left);
-                    if ray < self.playable.vlx  && self.playable.distance_to(obj) == 0.0 {
+                    if self.playable.ray_cast(obj, Direction::Left) < self.playable.vlx  && self.playable.distance_to(obj) == 0.0 {
                         m_left = false;
                     }
                 }
@@ -28,8 +27,7 @@ impl Observer {
             true => {
                 let mut m_top = true;
                 for obj in &objects{
-                    let mut ray = self.playable.ray_cast(obj, Direction::Top);
-                    if ray < self.playable.vty  && self.playable.distance_to(obj) == 0.0 {
+                    if self.playable.ray_cast(obj, Direction::Top) < self.playable.vty  && self.playable.distance_to(obj) == 0.0 {
                         m_top = false;
                     }
                 }
@@ -43,8 +41,7 @@ impl Observer {
             true => {
                 let mut m_right = true;
                 for obj in &objects{
-                    let mut ray = self.playable.ray_cast(obj, Direction::Right);
-                    if ray < self.playable.vrx  && self.playable.distance_to(obj) == 0.0 {
+                    if self.playable.ray_cast(obj, Direction::Right) < self.playable.vrx  && self.playable.distance_to(obj) == 0.0 {
                         m_right = false;
                     }
                 }
@@ -58,8 +55,7 @@ impl Observer {
             true => {
                 let mut m_bottom = true;
                 for obj in &objects{
-                    let mut ray = self.playable.ray_cast(obj, Direction::Bottom);
-                    if ray < self.playable.vby && self.playable.distance_to(obj) == 0.0 {
+                    if self.playable.ray_cast(obj, Direction::Bottom) < self.playable.vby && self.playable.distance_to(obj) == 0.0 {
                         m_bottom = false;
                     }
                 }

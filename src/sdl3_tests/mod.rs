@@ -13,16 +13,13 @@ use crate::collider::{
 };
 use crate::observer::Observer;
 
-use std::{
-    mem::zeroed,
-    ptr::null_mut
-};
+use std::mem::zeroed;
 
 pub fn sdl3_render_test(){
     let mut sdl3 = SDL3::new();
     sdl3_init(&mut sdl3, SDL_INIT_VIDEO);
     // Создания наблюдателя сцены с настройками окна и вектором коллайдеров
-    let mut playable = Collider{x: 100.0, y: 100.0, w: 128.0, h: 72.0, type_: COLLIDER_PLAYABLE, ..Collider::default()};
+    let mut playable = Collider{x: 100.0, y: 100.0, w: 50.0, h: 50.0, type_: COLLIDER_PLAYABLE, ..Collider::default()};
     playable.init(5.0);
     let mut observer = Observer{
         playable: playable,
@@ -30,7 +27,7 @@ pub fn sdl3_render_test(){
             Collider{x: 800.0, y: 400.0, w:300.0, h: 150.0, type_: COLLIDER_BLOCK, ..Collider::default()},
             Collider{x: 100.0, y: 600.0, w:300.0, h: 150.0, type_: COLLIDER_BLOCK, ..Collider::default()}
         ],
-        window: [1920.0, 1280.0],
+        window: [1280.0, 720.0],
         ..Observer::default()
     };
     // Создание окна
@@ -38,7 +35,7 @@ pub fn sdl3_render_test(){
         &mut sdl3, "Movement Test App",
         observer.window[0] as u32,
         observer.window[1] as u32,
-        SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN
+        SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL
     );
     // SDL3 docs code
     let renderer = sdl3_create_renderer(&mut sdl3, window, "");

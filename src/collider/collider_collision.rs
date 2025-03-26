@@ -1,7 +1,7 @@
 use crate::collider::Collider;
 
 impl Collider{
-
+    // Просчет дистанции между объектами
     pub fn distance_to(&self, object: &Collider) -> f32 {
             // Вычисляем расстояния до границ
             let dx = if self.x + self.w < object.x {
