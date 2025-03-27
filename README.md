@@ -3,7 +3,7 @@
 #### RSDL.collider
 
 - `mod`
-	- `pub struct Collider {type_, x, y, w, h, vlx, vty, vtx, vby}`
+	- `pub struct Collider {type_, span, color, x, y, w, h, vlx, vty, vtx, vby}`
 	- `pub enum Direction {Left, Top, Right, Bottom}`
 	- `Collider.init(&mut self, vel f32)`
 - `collider_move`
