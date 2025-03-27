@@ -1,5 +1,12 @@
 // SDL_INIT CONSTANTS START------------------------------------------------------------------------
+pub const SDL_INIT_AUDIO: u32 = 0x00000010;
 pub const SDL_INIT_VIDEO: u32 = 0x00000020;
+pub const SDL_INIT_JOYSTICK: u32 = 0x00000200;
+pub const SDL_INIT_HAPTIC: u32 = 0x00001000;
+pub const SDL_INIT_GAMEPAD: u32 = 0x00002000;
+pub const SDL_INIT_EVENTS: u32 = 0x00004000;
+pub const SDL_INIT_SENSOR: u32 = 0x00008000;
+pub const SDL_INIT_CAMERA: u32 = 0x00010000;
 // SDL_INIT CONSTANTS END--------------------------------------------------------------------------
 
 // SDL_EVENT CONSTANTS START-----------------------------------------------------------------------

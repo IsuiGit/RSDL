@@ -15,6 +15,8 @@ pub enum Direction {
 #[derive(Clone, Copy, Debug, PartialEq, Default)]
 pub struct Collider{
     pub type_: u32,
+    pub span: u32,
+    pub color: (u8, u8, u8, u8),
     pub x: f32,
     pub y: f32,
     pub w: f32,
