@@ -4,13 +4,21 @@ pub mod collider_ray;
 pub mod collider_collision;
 pub mod collider_consts;
 
+#[derive(Debug, Clone)]
+pub enum Direction {
+    Left,
+    Top,
+    Right,
+    Bottom,
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Default)]
 pub struct Collider{
+    pub type_: u32,
     pub x: f32,
     pub y: f32,
     pub w: f32,
     pub h: f32,
-    pub type_: u32,
     pub vlx: f32,
     pub vty: f32,
     pub vrx: f32,

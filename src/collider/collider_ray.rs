@@ -1,12 +1,7 @@
-use crate::collider::Collider;
-
-#[derive(Debug)]
-pub enum Direction {
-    Left,
-    Right,
-    Top,
-    Bottom,
-}
+use crate::collider::{
+    Collider,
+    Direction
+};
 
 impl Collider {
     // Рэйкастинг по направлению движения для определения расстояния до объекта

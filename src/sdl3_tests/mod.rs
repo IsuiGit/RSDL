@@ -19,13 +19,13 @@ pub fn sdl3_render_test(){
     let mut sdl3 = SDL3::new();
     sdl3_init(&mut sdl3, SDL_INIT_VIDEO);
     // Создания наблюдателя сцены с настройками окна и вектором коллайдеров
-    let mut playable = Collider{x: 100.0, y: 100.0, w: 50.0, h: 50.0, type_: COLLIDER_PLAYABLE, ..Collider::default()};
+    let mut playable = Collider{type_: COLLIDER_PLAYABLE, x: 100.0, y: 100.0, w: 50.0, h: 50.0, ..Collider::default()};
     playable.init(5.0);
     let mut observer = Observer{
         playable: playable,
         objects: vec![
-            Collider{x: 800.0, y: 400.0, w:300.0, h: 150.0, type_: COLLIDER_BLOCK, ..Collider::default()},
-            Collider{x: 100.0, y: 600.0, w:300.0, h: 150.0, type_: COLLIDER_BLOCK, ..Collider::default()}
+            Collider{type_: COLLIDER_BLOCK, x: 800.0, y: 400.0, w:300.0, h: 150.0, ..Collider::default()},
+            Collider{type_: COLLIDER_BLOCK, x: 100.0, y: 600.0, w:300.0, h: 150.0, ..Collider::default()}
         ],
         window: [1280.0, 720.0],
         ..Observer::default()

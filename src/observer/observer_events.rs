@@ -1,8 +1,8 @@
 use crate::observer::Observer;
 use crate::collider::{
     Collider,
+    Direction,
     collider_consts::*,
-    collider_ray::Direction,
 };
 use crate::sdl3::sdl3_consts::*;
 
@@ -12,13 +12,14 @@ impl Observer {
         match self.events.contains(&SDLK_A){
             true => {
                 let mut m_left = true;
+                let direction = Direction::Left;
                 for obj in &objects{
-                    if self.playable.ray_cast(obj, Direction::Left) < self.playable.vlx  && self.playable.distance_to(obj) == 0.0 {
+                    if self.playable.ray_cast(obj, direction.clone()) < self.playable.vlx  && self.playable.distance_to(obj) == 0.0 {
                         m_left = false;
                     }
                 }
                 if m_left{
-                    self.playable.move_left(self.window);
+                    self.playable.direction_move(self.window, direction.clone());
                 }
             }
             _ => {}
@@ -26,13 +27,14 @@ impl Observer {
         match self.events.contains(&SDLK_W){
             true => {
                 let mut m_top = true;
+                let direction = Direction::Top;
                 for obj in &objects{
-                    if self.playable.ray_cast(obj, Direction::Top) < self.playable.vty  && self.playable.distance_to(obj) == 0.0 {
+                    if self.playable.ray_cast(obj, direction.clone()) < self.playable.vty  && self.playable.distance_to(obj) == 0.0 {
                         m_top = false;
                     }
                 }
                 if m_top{
-                    self.playable.move_top(self.window);
+                    self.playable.direction_move(self.window, direction.clone());
                 }
             }
             _ => {}
@@ -40,13 +42,14 @@ impl Observer {
         match self.events.contains(&SDLK_D){
             true => {
                 let mut m_right = true;
+                let direction = Direction::Right;
                 for obj in &objects{
-                    if self.playable.ray_cast(obj, Direction::Right) < self.playable.vrx  && self.playable.distance_to(obj) == 0.0 {
+                    if self.playable.ray_cast(obj, direction.clone()) < self.playable.vrx  && self.playable.distance_to(obj) == 0.0 {
                         m_right = false;
                     }
                 }
                 if m_right{
-                    self.playable.move_right(self.window);
+                    self.playable.direction_move(self.window, direction.clone());
                 }
             }
             _ => {}
@@ -54,13 +57,14 @@ impl Observer {
         match self.events.contains(&SDLK_S){
             true => {
                 let mut m_bottom = true;
+                let direction = Direction::Bottom;
                 for obj in &objects{
-                    if self.playable.ray_cast(obj, Direction::Bottom) < self.playable.vby && self.playable.distance_to(obj) == 0.0 {
+                    if self.playable.ray_cast(obj, direction.clone()) < self.playable.vby && self.playable.distance_to(obj) == 0.0 {
                         m_bottom = false;
                     }
                 }
                 if m_bottom{
-                    self.playable.move_bottom(self.window);
+                    self.playable.direction_move(self.window, direction.clone());
                 }
              }
             _ => {}
