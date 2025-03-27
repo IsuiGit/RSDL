@@ -4,25 +4,25 @@
 
 - `mod`
 	- `pub struct Collider {type_, x, y, w, h, vlx, vty, vtx, vby}`
-	- `pub enum Direction {Left, Top, Right, Bottom`
-	- [[Collider#`Collider.init(&mut self, vel f32)`]]
+	- `pub enum Direction {Left, Top, Right, Bottom}`
+	- `Collider.init(&mut self, vel f32)`
 - `collider_move`
-	- [[Collider#`Collider.direction_move(&mut self, max [f32; 2], direction Direction)`]]
+	- `Collider.direction_move(&mut self, max [f32; 2], direction Direction)`
 - `collider_sys`
-	- [[Collider#`Collider.global_collide(&self, max [f32; 2]) -> (bool, bool, bool, bool)`]]
+	- `Collider.global_collide(&self, max [f32; 2]) -> (bool, bool, bool, bool)`
 - `collider_ray`
-	- [[Collider#`Collider.ray_cast(&self, object &Colider, direction Direction) -> f32`]]
+	- `Collider.ray_cast(&self, object &Colider, direction Direction) -> f32`
 - `collider_collision`
-	- [[Collider#`Collider.distance_to(&self, object &Collider) -> f32]]
+	- `Collider.distance_to(&self, object &Collider) -> f32`
 
 #### RSDL.observer
 
 - `mod`
 	- `pub struct Observer {playable, objects, window, events}`
 - `observer_events`
-	- [[Observer#`Observer.proceed_events(&mut self)`]]
+	- `Observer.proceed_events(&mut self)`
 - `observer_sys`
-	- [[Observer#`Observer.resize(&mut self, size [f32, 2])`]]
+	- `Observer.resize(&mut self, size [f32, 2])`
 
 #### Collider
 
