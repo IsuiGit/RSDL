@@ -1,8 +1,20 @@
 use crate::sdl3::sdl3_structs::*;
-use std::{ffi::c_void, os::raw::c_char};
+use std::{
+    ffi::c_void,
+    os::raw::c_char
+};
 // SDL3 types register
 
-// SDL3 Sys types---------------------------------------------------------------------------------
+// SDL3_TTF Types ---------------------------------------------------------------------------------
+pub type SDLF_Init = unsafe extern "C" fn() -> bool;
+pub type SDLF_Quit = unsafe extern "C" fn();
+// ------------------------------------------------------------------------------------------------
+
+// SDL3 Event types -------------------------------------------------------------------------------
+pub type SDL_PushEvent = unsafe extern "C" fn(*mut SDL_Event) -> bool;
+// ------------------------------------------------------------------------------------------------
+
+// SDL3 Sys types ---------------------------------------------------------------------------------
 // SDL3_Init type
 pub type SDL_Init = unsafe extern "C" fn(u32) -> bool;
 // SDL3_Quit type
@@ -15,7 +27,7 @@ pub type SDL_Delay = unsafe extern "C" fn(u32);
 pub type SDL_PollEvent = unsafe extern "C" fn(*mut SDL_Event) -> bool;
 // ------------------------------------------------------------------------------------------------
 
-// SDL3 Create types-------------------------------------------------------------------------------
+// SDL3 Create types ------------------------------------------------------------------------------
 // SDL3_CreateWindow type
 pub type SDL_CreateWindow = unsafe extern "C" fn(*const i8, u32, u32, u64) -> *mut c_void;
 // SDL3_DestroyWindow type
@@ -26,11 +38,14 @@ pub type SDL_CreateRenderer = unsafe extern "C" fn(*mut c_void, *const c_char) -
 pub type SDL_DestroyRenderer = unsafe extern "C" fn(*mut c_void);
 // ------------------------------------------------------------------------------------------------
 
-// SDL3 Get types----------------------------------------------------------------------------------
+// SDL3 Get types ---------------------------------------------------------------------------------
+// SDL3_GetWindowSize
 pub type SDL_GetWindowSize = unsafe extern "C" fn(*mut c_void, *mut i32, *mut i32) -> bool;
+// SDL3_GetWindowSurface
+pub type SDL_GetWindowSurface = unsafe extern "C" fn(*mut c_void) -> *mut c_void;
 // ------------------------------------------------------------------------------------------------
 
-// SDL3 Render types-------------------------------------------------------------------------------
+// SDL3 Render types ------------------------------------------------------------------------------
 // SDL3_SetRenderDrawColor
 pub type SDL_SetRenderDrawColor = unsafe extern "C" fn(*mut c_void, u8, u8, u8, u8) -> bool;
 // SDL3_RenderClear

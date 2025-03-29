@@ -2,93 +2,78 @@ use crate::sdl3::{
     SDL3,
     sdl3_consts::*,
     sdl3_structs::*,
-    sdl3_sys::*,
-    sdl3_window::*,
-    sdl3_render::*
+    sdl3_sys::{
+        sdl3_poll_event,
+        sdl3_delay
+    },
+    sdl3_window::sdl3_get_window_size
 };
-
 use crate::collider::{
     Collider,
     collider_consts::*
 };
-
 use crate::artist::{
     Artist,
     artist_consts::*
 };
-
 use crate::observer::Observer;
-
 use std::mem::zeroed;
 
 pub fn sdl3_movement_system_test(){
     let mut sdl3 = SDL3::new();
-    sdl3_init(&mut sdl3, SDL_INIT_VIDEO | SDL_INIT_AUDIO);
     // Создание "играбельного объекта"-------------------------------------------------------------
-    let mut playable = Collider{
+    let playable = Collider{
         type_: COLLIDER_PLAYABLE,
         span: ARTIST_RECTANGLE,
         color: (255, 255, 255, 255),
-        x: 100.0,
-        y: 100.0,
-        w: 50.0,
-        h: 50.0,
-        ..Collider::default()
+        pos: [100.0, 100.0],
+        size: [50.0, 50.0],
+        velocity: [5.0, 5.0, 5.0, 5.0]
     };
-    playable.init(5.0);
     // --------------------------------------------------------------------------------------------
     // Создание структуры "наблюдателя", с содержимым в виде "играбельного" объекта, окружения
     // сцены, окна и настроек по умолчанию (default)-----------------------------------------------
-    let mut observer = Observer{
-        playable: playable,
-        objects: vec![
+    let mut observer = Observer::init(
+        &mut sdl3,
+        playable,
+        vec![
             Collider{
                 type_: COLLIDER_BLOCK,
                 span: ARTIST_RECTANGLE,
                 color: (127, 65, 250, 255),
-                x: 800.0,
-                y: 400.0,
-                w:300.0,
-                h: 150.0,
-                ..Collider::default()
+                pos: [800.0, 400.0],
+                size: [300.0, 150.0],
+                velocity: [0.0, 0.0, 0.0, 0.0]
             },
             Collider{
                 type_: COLLIDER_BLOCK,
                 span: ARTIST_RECTANGLE,
                 color: (17, 145, 112, 255),
-                x: 100.0,
-                y: 600.0,
-                w:300.0,
-                h: 150.0,
-                ..Collider::default()
+                pos: [100.0, 600.0],
+                size: [300.0, 150.0],
+                velocity: [0.0, 0.0, 0.0, 0.0]
             }
         ],
-        window: [1280.0, 720.0],
-        ..Observer::default()
-    };
-    // --------------------------------------------------------------------------------------------
-    // Создание окна и рендера---------------------------------------------------------------------
-    let window = sdl3_create_window(
-        &mut sdl3, "Movement Test App",
-        observer.window[0] as u32,
-        observer.window[1] as u32,
-        SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL
+        [1920.0, 1080.0],
+        SDL_INIT_VIDEO | SDL_INIT_AUDIO,
+        SDL_WINDOW_FULLSCREEN | SDL_WINDOW_OPENGL
     );
-    let renderer = sdl3_create_renderer(&mut sdl3, window, "");
+    // Инициализируем стандартную клавиатуру (WASD+ESC)
+    observer.init_default_keyboard();
     // --------------------------------------------------------------------------------------------
     // Создание "художника" для отрисовки объектов ------------------------------------------------
     let artist = Artist{};
     // --------------------------------------------------------------------------------------------
     // Основной цикл ------------------------------------------------------------------------------
-    let mut loopShouldStop = false;
-    while !loopShouldStop {
+    let mut run = true;
+    while run {
         unsafe{
             let mut event: SDL_Event = zeroed();
             while sdl3_poll_event(&mut sdl3)(&mut event as *mut SDL_Event){
-                let size = sdl3_get_window_size(&mut sdl3, window);
+                let size = sdl3_get_window_size(&mut sdl3, observer.window);
                 match event.type_{
                     SDL_EVENT_QUIT => {
-                        loopShouldStop = true;
+                        run = false;
                         break;
                     },
                     SDL_EVENT_WINDOW_RESIZED => {
@@ -99,19 +84,14 @@ pub fn sdl3_movement_system_test(){
                     _ => {},
                 }
             }
-            observer.proceed_events();
+            observer.proceed_events(&mut sdl3);
             // Artist section (SDL3 impl)----------------------------------------------------------
-            sdl3_set_render_draw_color(&mut sdl3, renderer, 0, 0, 0, 255);
-            sdl3_render_clear(&mut sdl3, renderer);
-            artist.draw(&mut sdl3, renderer, &observer.playable, &observer.objects);
-            sdl3_render_present(&mut sdl3, renderer);
+            artist.draw(&mut sdl3, observer.renderer, &observer.playable, &observer.objects, (0, 0, 0, 255));
             // ------------------------------------------------------------------------------------
             event.drop_fields();
             sdl3_delay(&mut sdl3, 16);
         }
     }
     // --------------------------------------------------------------------------------------------
-    sdl3_destroy_renderer(&mut sdl3, renderer);
-    sdl3_destroy_window(&mut sdl3, window);
-    sdl3_quit(&mut sdl3);
+    observer.destroy(&mut sdl3);
 }

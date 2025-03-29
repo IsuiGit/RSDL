@@ -43,10 +43,10 @@ impl Collider {
         //   and can be used to prevent it from moving outside the defined boundaries.
         // code -----------------------------------------------------------------------------------
         (
-            self.x <= 0.0,
-            self.y <= 0.0,
-            self.x + self.w >= max[0],
-            self.y + self.h >= max[1]
+            self.pos[0] <= 0.0,
+            self.pos[1] <= 0.0,
+            self.pos[0] + self.size[0] >= max[0],
+            self.pos[1] + self.size[1] >= max[1]
         )
         // ----------------------------------------------------------------------------------------
     }

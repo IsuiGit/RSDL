@@ -45,6 +45,7 @@ pub const SDL_WINDOW_NOT_FOCUSABLE: u64 = 0x0000000080000000;
 // ------------------------------------------------------------------------------------------------
 
 // SDL_KEY CONSTANTS START-------------------------------------------------------------------------
+pub const SDLK_ESCAPE: u32 = 0x0000001b;
 pub const SDLK_A: u32 = 0x00000061;
 pub const SDLK_B: u32 = 0x00000062;
 pub const SDLK_C: u32 = 0x00000063;
@@ -88,4 +89,11 @@ pub const SDL_KMOD_NUM: u16 = 0x1000 | SDL_KMOD_PADDING;
 pub const SDL_KMOD_CAPS: u16 = 0x2000 | SDL_KMOD_PADDING;
 pub const SDL_KMOD_MODE: u16 = 0x4000 | SDL_KMOD_PADDING;
 pub const SDL_KMOD_SCROLL: u16 = 0x8000 | SDL_KMOD_PADDING;
+// ------------------------------------------------------------------------------------------------
+
+// SDL3 SURFACE CONSTANTS START--------------------------------------------------------------------
+pub const SDL_SURFACE_PREALLOCATED: u32 = 0x00000001;
+pub const SDL_SURFACE_LOCK_NEEDED: u32 = 0x00000002;
+pub const SDL_SURFACE_LOCKED: u32 = 0x00000004;
+pub const SDL_SURFACE_SIMD_ALIGNED: u32 = 0x00000008;
 // ------------------------------------------------------------------------------------------------

@@ -13,14 +13,19 @@ use libloading::Library;
 use std::path::Path;
 // ------------------------------------------------------------------------------------------------
 // SDL3 MAIN STRUCT--------------------------------------------------------------------------------
-pub struct SDL3{lib: Library}
+pub struct SDL3{
+    lib: Library,
+    ttf_lib: Library
+}
 // ------------------------------------------------------------------------------------------------
 impl SDL3{
     pub fn new() -> Self {
         unsafe {
             let lib = Library::new(Path::new("src/sdl3/bin/SDL3.dll"))
                 .expect("Failed to load SDL3.dll");
-            SDL3 {lib}
+            let ttf_lib = Library::new(Path::new("src/sdl3/bin/SDL3_ttf.dll"))
+                .expect("Failed to load SDL3_ttf.dll");
+            SDL3 {lib: lib, ttf_lib: ttf_lib}
         }
     }
 }

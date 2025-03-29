@@ -3,7 +3,8 @@ use crate::sdl3::{
     SDL3,
     SDL_CreateWindow,
     SDL_DestroyWindow,
-    SDL_GetWindowSize
+    SDL_GetWindowSize,
+    SDL_GetWindowSurface,
 };
 // ------------------------------------------------------------------------------------------------
 // STANDART MODS-----------------------------------------------------------------------------------
@@ -32,6 +33,14 @@ pub fn sdl3_get_window_size(sdl3: &mut SDL3, window: *mut c_void) -> (i32, i32) 
             (0, 0)
         }
 
+    }
+}
+
+pub fn sdl3_get_window_surface(sdl3: &mut SDL3, window: *mut c_void) -> *mut c_void{
+    unsafe {
+        let _sdl3_get_window_surface: Symbol<SDL_GetWindowSurface> = sdl3.lib.get(b"SDL_GetWindowSurface")
+            .expect("Failed to get symbol SDL_GetWindowSurface");
+        _sdl3_get_window_surface(window)
     }
 }
 

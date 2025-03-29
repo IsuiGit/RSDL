@@ -17,21 +17,7 @@ pub struct Collider{
     pub type_: u32,
     pub span: u32,
     pub color: (u8, u8, u8, u8),
-    pub x: f32,
-    pub y: f32,
-    pub w: f32,
-    pub h: f32,
-    pub vlx: f32,
-    pub vty: f32,
-    pub vrx: f32,
-    pub vby: f32,
-}
-
-impl Collider{
-    pub fn init(&mut self, vel: f32){
-        self.vlx = vel;
-        self.vty = vel;
-        self.vrx = vel;
-        self.vby = vel;
-    }
+    pub pos: [f32; 2],
+    pub size: [f32; 2],
+    pub velocity: [f32; 4],
 }

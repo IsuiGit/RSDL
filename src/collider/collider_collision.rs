@@ -33,17 +33,17 @@ impl Collider{
         //   returns `0.0`. Otherwise, it calculates and returns the Euclidean distance using the
         //   Pythagorean theorem.
         // code -----------------------------------------------------------------------------------
-        let dx = if self.x + self.w < object.x {
-            object.x - (self.x + self.w)
-        } else if self.x > object.x + object.w {
-            self.x - (object.x + object.w)
+        let dx = if self.pos[0] + self.size[0] < object.pos[0] {
+            object.pos[0] - (self.pos[0] + self.size[0])
+        } else if self.pos[0] > object.pos[0] + object.size[0] {
+            self.pos[0] - (object.pos[0] + object.size[0])
         } else {
             0.0
         };
-        let dy = if self.y + self.h < object.y {
-            object.y - (self.y + self.h)
-        } else if self.y > object.y + object.h {
-            self.y - (object.y + object.h)
+        let dy = if self.pos[1] + self.size[1] < object.pos[1] {
+            object.pos[1] - (self.pos[1] + self.size[1])
+        } else if self.pos[1] > object.pos[1] + object.size[1] {
+            self.pos[1] - (object.pos[1] + object.size[1])
         } else {
             0.0
         };

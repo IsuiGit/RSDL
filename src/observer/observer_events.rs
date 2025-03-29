@@ -1,13 +1,22 @@
-use crate::observer::Observer;
+use crate::observer::{
+    Observer,
+    observer_consts::*
+};
 use crate::collider::{
     Collider,
     Direction,
     collider_consts::*,
 };
-use crate::sdl3::sdl3_consts::*;
+use crate::sdl3::{
+    SDL3,
+    sdl3_consts::*,
+    sdl3_structs::SDL_Event,
+    sdl3_sys::sdl3_push_event,
+};
+use std::mem::zeroed;
 
 impl Observer {
-    pub fn proceed_events(&mut self){
+    pub fn proceed_events(&mut self, sdl3: &mut SDL3){
         // Processes input events and updates the position of the playable character accordingly.
         //
         // This function checks for specific key events (A, W, D, S) to determine the direction
@@ -35,62 +44,76 @@ impl Observer {
         //   correctly to handle collision detection.
         // code -----------------------------------------------------------------------------------
         let objects: Vec<&Collider> = self.objects.iter().filter(|obj| obj.type_ == COLLIDER_BLOCK).collect();
-        match self.events.contains(&SDLK_A){
+        if self.keyboard.is_empty(){
+            println!("Keyboard not initialized!");
+            return;
+        }
+        match self.events.contains(&self.keyboard.get(&OBSERVER_EXIT_EVENT).unwrap()){
+            true => {
+                unsafe {
+                    let mut event: SDL_Event = zeroed();
+                    event.type_ = SDL_EVENT_QUIT;
+                    sdl3_push_event(sdl3, &mut event as *mut SDL_Event);
+                }
+            }
+            _ => {}
+        }
+        match self.events.contains(&self.keyboard.get(&OBSERVER_MOVE_LEFT_EVENT).unwrap()){
             true => {
                 let mut m_left = true;
                 let direction = Direction::Left;
                 for obj in &objects{
-                    if self.playable.ray_cast(obj, direction.clone()) < self.playable.vlx  && self.playable.distance_to(obj) == 0.0 {
+                    if self.playable.ray_cast(obj, direction.clone()) < self.playable.velocity[0]  && self.playable.distance_to(obj) == 0.0 {
                         m_left = false;
                     }
                 }
                 if m_left{
-                    self.playable.direction_move(self.window, direction.clone());
+                    self.playable.direction_move(self.size, direction.clone());
                 }
             }
             _ => {}
         }
-        match self.events.contains(&SDLK_W){
+        match self.events.contains(&self.keyboard.get(&OBSERVER_MOVE_TOP_EVENT).unwrap()){
             true => {
                 let mut m_top = true;
                 let direction = Direction::Top;
                 for obj in &objects{
-                    if self.playable.ray_cast(obj, direction.clone()) < self.playable.vty  && self.playable.distance_to(obj) == 0.0 {
+                    if self.playable.ray_cast(obj, direction.clone()) < self.playable.velocity[1]  && self.playable.distance_to(obj) == 0.0 {
                         m_top = false;
                     }
                 }
                 if m_top{
-                    self.playable.direction_move(self.window, direction.clone());
+                    self.playable.direction_move(self.size, direction.clone());
                 }
             }
             _ => {}
         }
-        match self.events.contains(&SDLK_D){
+        match self.events.contains(&self.keyboard.get(&OBSERVER_MOVE_RIGHT_EVENT).unwrap()){
             true => {
                 let mut m_right = true;
                 let direction = Direction::Right;
                 for obj in &objects{
-                    if self.playable.ray_cast(obj, direction.clone()) < self.playable.vrx  && self.playable.distance_to(obj) == 0.0 {
+                    if self.playable.ray_cast(obj, direction.clone()) < self.playable.velocity[2]  && self.playable.distance_to(obj) == 0.0 {
                         m_right = false;
                     }
                 }
                 if m_right{
-                    self.playable.direction_move(self.window, direction.clone());
+                    self.playable.direction_move(self.size, direction.clone());
                 }
             }
             _ => {}
         }
-        match self.events.contains(&SDLK_S){
+        match self.events.contains(&self.keyboard.get(&OBSERVER_MOVE_BOTTOM_EVENT).unwrap()){
             true => {
                 let mut m_bottom = true;
                 let direction = Direction::Bottom;
                 for obj in &objects{
-                    if self.playable.ray_cast(obj, direction.clone()) < self.playable.vby && self.playable.distance_to(obj) == 0.0 {
+                    if self.playable.ray_cast(obj, direction.clone()) < self.playable.velocity[3] && self.playable.distance_to(obj) == 0.0 {
                         m_bottom = false;
                     }
                 }
                 if m_bottom{
-                    self.playable.direction_move(self.window, direction.clone());
+                    self.playable.direction_move(self.size, direction.clone());
                 }
              }
             _ => {}

@@ -45,16 +45,16 @@ impl Collider {
         // code -----------------------------------------------------------------------------------
         match direction {
             Direction::Left => {
-                (self.x - (object.x + object.w)).abs()
+                (self.pos[0] - (object.pos[0] + object.size[0])).abs()
             }
             Direction::Right => {
-                ((object.x - self.x) - self.w).abs()
+                ((object.pos[0] - self.pos[0]) - self.size[0]).abs()
             }
             Direction::Top => {
-                (self.y - (object.y + object.h)).abs()
+                (self.pos[1] - (object.pos[1] + object.size[1])).abs()
             }
             Direction::Bottom => {
-                ((object.y - self.y) - self.h).abs()
+                ((object.pos[1] - self.pos[1]) - self.size[1]).abs()
             }
         }
         // ----------------------------------------------------------------------------------------

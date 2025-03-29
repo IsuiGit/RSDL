@@ -2,19 +2,23 @@ use crate::artist::{
     Artist,
     artist_consts::*
 };
-
-use crate::collider::Collider;
-
 use crate::sdl3::{
     SDL3,
     sdl3_render::*,
     sdl3_structs::*
 };
-
+use crate::collider::Collider;
 use std::ffi::c_void;
 
 impl Artist{
-    pub fn draw(&self, sdl3: &mut SDL3, renderer: *mut c_void, playable: &Collider, objects: &Vec<Collider>){
+    pub fn draw(
+        &self,
+        sdl3: &mut SDL3,
+        renderer: *mut c_void, 
+        playable: &Collider,
+        objects: &Vec<Collider>,
+        background: (u8, u8, u8, u8)
+    ) {
         // Renders the playable character and the surrounding objects on the screen.
         //
         // This function draws the playable character and all objects in the provided vector
@@ -47,9 +51,11 @@ impl Artist{
         // - The function assumes that the SDL3 context and renderer have been properly initialized
         //   before this function is called.
         // code -----------------------------------------------------------------------------------
+        sdl3_set_render_draw_color(sdl3, renderer, background.0, background.1, background.2, background.3);
+        sdl3_render_clear(sdl3, renderer);
         match playable.span{
             ARTIST_RECTANGLE => {
-                let rect = SDL_FRect{x: playable.x, y: playable.y, w: playable.w, h: playable.h};
+                let rect = SDL_FRect{x: playable.pos[0], y: playable.pos[1], w: playable.size[0], h: playable.size[1]};
                 sdl3_set_render_draw_color(sdl3, renderer, playable.color.0, playable.color.1, playable.color.2, playable.color.3);
                 sdl3_render_fill_rect(sdl3, renderer, &rect as *const SDL_FRect);
             },
@@ -58,13 +64,14 @@ impl Artist{
         for obj in objects{
             match obj.span{
                 ARTIST_RECTANGLE => {
-                    let rect = SDL_FRect{x: obj.x, y: obj.y, w: obj.w, h: obj.h};
+                    let rect = SDL_FRect{x: obj.pos[0], y: obj.pos[1], w: obj.size[0], h: obj.size[1]};
                     sdl3_set_render_draw_color(sdl3, renderer, obj.color.0, obj.color.1, obj.color.2, obj.color.3);
                     sdl3_render_fill_rect(sdl3, renderer, &rect as *const SDL_FRect);
                 },
                 _ => {}
             }
         }
+        sdl3_render_present(sdl3, renderer);
         // ----------------------------------------------------------------------------------------
     }
 }

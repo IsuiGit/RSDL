@@ -1,4 +1,5 @@
 use crate::observer::Observer;
+use crate::sdl3::SDL3;
 
 impl Observer{
     pub fn resize(&mut self, size: [f32; 2]){
@@ -31,11 +32,11 @@ impl Observer{
         // - This function assumes that the `playable` character and `objects` are properly initialized
         //   before resizing.
         // code -----------------------------------------------------------------------------------
-        let sc_x = self.window[0] / size[0];
-        let sc_y = self.window[1] / size[1];
+        let sc_x = self.size[0] / size[0];
+        let sc_y = self.size[1] / size[1];
         self.resize_playable(sc_x, sc_y);
         self.resize_objects(sc_x, sc_y);
-        self.window = size;
+        self.size = size;
         // -----------------------------------------------------------------------------------------
     }
 
@@ -63,10 +64,10 @@ impl Observer{
         // - This function should be called as part of the resizing process to ensure the playable
         //   character is correctly resized.
         // code -----------------------------------------------------------------------------------
-        self.playable.w = self.playable.w / sc_x;
-        self.playable.h = self.playable.h / sc_y;
-        self.playable.x = self.playable.x / sc_x;
-        self.playable.y = self.playable.y / sc_y;
+        self.playable.size[0] = self.playable.size[0] / sc_x;
+        self.playable.size[1] = self.playable.size[1] / sc_y;
+        self.playable.pos[0] = self.playable.pos[0] / sc_x;
+        self.playable.pos[1] = self.playable.pos[1] / sc_y;
         // ----------------------------------------------------------------------------------------
     }
 
@@ -93,10 +94,10 @@ impl Observer{
         //   are correctly resized.
         // code -----------------------------------------------------------------------------------
         for obj in &mut self.objects{
-            obj.w = obj.w / sc_x;
-            obj.h = obj.h / sc_y;
-            obj.x = obj.x / sc_x;
-            obj.y = obj.y / sc_y;
+            obj.size[0] = obj.size[0] / sc_x;
+            obj.size[1] = obj.size[1] / sc_y;
+            obj.pos[0] = obj.pos[0] / sc_x;
+            obj.pos[1] = obj.pos[1] / sc_y;
         }
         // ----------------------------------------------------------------------------------------
     }

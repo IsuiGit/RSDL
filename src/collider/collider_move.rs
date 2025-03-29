@@ -43,22 +43,22 @@ impl Collider{
         match direction {
             Direction::Left => {
                 if !self.global_collide(max).0 {
-                    self.x -= self.vlx;
+                    self.pos[0] -= self.velocity[0];
                 }
             }
             Direction::Top => {
                 if !self.global_collide(max).1 {
-                    self.y -= self.vty;
+                    self.pos[1] -= self.velocity[1];
                 }
             }
             Direction::Right => {
                 if !self.global_collide(max).2 {
-                    self.x += self.vrx;
+                    self.pos[0] += self.velocity[2];
                 }
             }
             Direction::Bottom => {
                 if !self.global_collide(max).3 {
-                    self.y += self.vby;
+                    self.pos[1] += self.velocity[3];
                 }
             }
         }
