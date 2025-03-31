@@ -17,9 +17,10 @@ use crate::artist::{
     artist_consts::*
 };
 use crate::observer::Observer;
-use std::mem::zeroed;
+use crate::screenwriter::Scene;
+use std::{collections::HashMap, mem::zeroed};
 
-pub fn sdl3_movement_system_test(){
+pub fn sdl3_osa_system_test(){
     let mut sdl3 = SDL3::new();
     // Создание "играбельного объекта"-------------------------------------------------------------
     let playable = Collider{
@@ -33,10 +34,9 @@ pub fn sdl3_movement_system_test(){
     // --------------------------------------------------------------------------------------------
     // Создание структуры "наблюдателя", с содержимым в виде "играбельного" объекта, окружения
     // сцены, окна и настроек по умолчанию (default)-----------------------------------------------
-    let mut observer = Observer::init(
-        &mut sdl3,
-        playable,
-        vec![
+    let mut scenes: HashMap<u64, Scene> = HashMap::new();
+    let scene_0 = Scene{
+        objects: vec![
             Collider{
                 type_: COLLIDER_BLOCK,
                 span: ARTIST_RECTANGLE,
@@ -54,6 +54,35 @@ pub fn sdl3_movement_system_test(){
                 velocity: [0.0, 0.0, 0.0, 0.0]
             }
         ],
+        next_scene: 1
+    };
+    let scene_1 = Scene{
+        objects: vec![
+            Collider{
+                type_: COLLIDER_BLOCK,
+                span: ARTIST_RECTANGLE,
+                color: (127, 65, 250, 255),
+                pos: [400.0, 200.0],
+                size: [100.0, 400.0],
+                velocity: [0.0, 0.0, 0.0, 0.0]
+            },
+            Collider{
+                type_: COLLIDER_BLOCK,
+                span: ARTIST_RECTANGLE,
+                color: (17, 145, 112, 255),
+                pos: [1000.0, 900.0],
+                size: [200.0, 200.0],
+                velocity: [0.0, 0.0, 0.0, 0.0]
+            }
+        ],
+        next_scene: 0
+    };
+    scenes.insert(0, scene_0);
+    scenes.insert(1, scene_1);
+    let mut observer = Observer::init(
+        &mut sdl3,
+        playable,
+        scenes,
         [1920.0, 1080.0],
         SDL_INIT_VIDEO | SDL_INIT_AUDIO,
         SDL_WINDOW_FULLSCREEN | SDL_WINDOW_OPENGL
@@ -86,7 +115,13 @@ pub fn sdl3_movement_system_test(){
             }
             observer.proceed_events(&mut sdl3);
             // Artist section (SDL3 impl)----------------------------------------------------------
-            artist.draw(&mut sdl3, observer.renderer, &observer.playable, &observer.objects, (0, 0, 0, 255));
+            artist.draw(
+                &mut sdl3,
+                observer.renderer,
+                &observer.playable,
+                &observer.scenes.get(&observer.current_scene).unwrap().objects,
+                (0, 0, 0, 255)
+            );
             // ------------------------------------------------------------------------------------
             event.drop_fields();
             sdl3_delay(&mut sdl3, 16);

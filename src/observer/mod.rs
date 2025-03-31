@@ -1,4 +1,5 @@
 use crate::collider::Collider;
+use crate::screenwriter::Scene;
 use std::{collections::{HashSet, HashMap}, ffi::c_void};
 use crate::sdl3::{
     SDL3,
@@ -26,7 +27,8 @@ pub mod observer_consts;
 #[derive(Debug)]
 pub struct Observer{
     pub playable: Collider,
-    pub objects: Vec<Collider>,
+    pub scenes: HashMap<u64, Scene>,
+    pub current_scene: u64,
     pub size: [f32; 2],
     pub events: HashSet<u32>,
     pub keyboard: HashMap<u16, u32>,
@@ -38,7 +40,7 @@ impl Observer {
     pub fn init(
         sdl3: &mut SDL3,
         playable: Collider,
-        objects: Vec<Collider>,
+        scenes: HashMap<u64, Scene>,
         size: [f32; 2],
         iflags: u32,
         wflags: u64
@@ -58,7 +60,8 @@ impl Observer {
         // Возвращаем объект "наблюдателя"
         Observer {
             playable: playable,
-            objects: objects,
+            scenes: scenes,
+            current_scene: 0,
             size: size,
             events: events,
             keyboard: keyboard,

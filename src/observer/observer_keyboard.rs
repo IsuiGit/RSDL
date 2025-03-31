@@ -2,10 +2,7 @@ use crate::observer::{
     Observer,
     observer_consts::*
 };
-use crate::sdl3::{
-    SDL3,
-    sdl3_consts::*
-};
+use crate::sdl3::sdl3_consts::*;
 use std::collections::HashMap;
 
 impl Observer{
@@ -17,6 +14,7 @@ impl Observer{
         keyboard.insert(OBSERVER_MOVE_BOTTOM_EVENT, SDLK_S);
         keyboard.insert(OBSERVER_MOVE_RIGHT_EVENT, SDLK_D);
         keyboard.insert(OBSERVER_EXIT_EVENT, SDLK_ESCAPE);
+        keyboard.insert(OBSERVER_CHANGE_SCENE_EVENT, SDLK_Z);
         self.keyboard = keyboard;
     }
 

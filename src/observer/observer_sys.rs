@@ -1,5 +1,4 @@
 use crate::observer::Observer;
-use crate::sdl3::SDL3;
 
 impl Observer{
     pub fn resize(&mut self, size: [f32; 2]){
@@ -93,7 +92,7 @@ impl Observer{
         // - This function should be called as part of the resizing process to ensure all objects
         //   are correctly resized.
         // code -----------------------------------------------------------------------------------
-        for obj in &mut self.objects{
+        for obj in &mut self.scenes.get_mut(&self.current_scene).unwrap().objects{
             obj.size[0] = obj.size[0] / sc_x;
             obj.size[1] = obj.size[1] / sc_y;
             obj.pos[0] = obj.pos[0] / sc_x;
