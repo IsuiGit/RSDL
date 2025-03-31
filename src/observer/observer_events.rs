@@ -55,7 +55,10 @@ impl Observer {
             let next = self.scenes.get(&self.current_scene).unwrap().next_scene;
             if self.scenes.contains_key(&next){
                 self.current_scene = next;
-                thread::sleep(Duration::from_secs(2));
+                thread::sleep(Duration::from_secs(1));
+            }
+            for obj in &self.scenes.get(&self.current_scene).unwrap().objects{
+                self.playable.nearest_edge(self.size, &obj);
             }
         }
 

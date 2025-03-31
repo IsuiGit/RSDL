@@ -63,10 +63,10 @@ impl Observer{
         // - This function should be called as part of the resizing process to ensure the playable
         //   character is correctly resized.
         // code -----------------------------------------------------------------------------------
-        self.playable.size[0] = self.playable.size[0] / sc_x;
-        self.playable.size[1] = self.playable.size[1] / sc_y;
-        self.playable.pos[0] = self.playable.pos[0] / sc_x;
-        self.playable.pos[1] = self.playable.pos[1] / sc_y;
+        self.playable.size[0] /= sc_x;
+        self.playable.size[1] /= sc_y;
+        self.playable.pos[0] /= sc_x;
+        self.playable.pos[1] /= sc_y;
         // ----------------------------------------------------------------------------------------
     }
 
@@ -93,10 +93,10 @@ impl Observer{
         //   are correctly resized.
         // code -----------------------------------------------------------------------------------
         for obj in &mut self.scenes.get_mut(&self.current_scene).unwrap().objects{
-            obj.size[0] = obj.size[0] / sc_x;
-            obj.size[1] = obj.size[1] / sc_y;
-            obj.pos[0] = obj.pos[0] / sc_x;
-            obj.pos[1] = obj.pos[1] / sc_y;
+            obj.size[0] /= sc_x;
+            obj.size[1] /= sc_y;
+            obj.pos[0] /= sc_x;
+            obj.pos[1] /= sc_y;
         }
         // ----------------------------------------------------------------------------------------
     }

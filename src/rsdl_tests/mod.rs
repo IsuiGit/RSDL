@@ -62,16 +62,16 @@ pub fn sdl3_osa_system_test(){
                 type_: COLLIDER_BLOCK,
                 span: ARTIST_RECTANGLE,
                 color: (127, 65, 250, 255),
-                pos: [400.0, 200.0],
-                size: [100.0, 400.0],
+                pos: [400.0, 800.0],
+                size: [200.0, 800.0],
                 velocity: [0.0, 0.0, 0.0, 0.0]
             },
             Collider{
                 type_: COLLIDER_BLOCK,
                 span: ARTIST_RECTANGLE,
                 color: (17, 145, 112, 255),
-                pos: [1000.0, 900.0],
-                size: [200.0, 200.0],
+                pos: [1820.0, 0.0],
+                size: [100.0, 150.0],
                 velocity: [0.0, 0.0, 0.0, 0.0]
             }
         ],

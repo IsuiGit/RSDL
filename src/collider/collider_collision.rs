@@ -53,4 +53,37 @@ impl Collider{
         (dx * dx + dy * dy).sqrt()
         // ----------------------------------------------------------------------------------------
     }
+
+    pub fn nearest_edge(&mut self, size: [f32; 2], object: &Collider) {
+        // ----------------------------------------------------------------------------------------
+        let dx = if self.distance_to(object) == 0.0 {
+            (object.pos[0] - (self.pos[0] + self.size[0]), (object.pos[0] + object.size[0]) - self.pos[0])
+        } else {
+            (0.0, 0.0)
+        };
+
+        let dy = if self.distance_to(object) == 0.0 {
+            (object.pos[1] - (self.pos[1] + self.size[1]), (object.pos[1] + object.size[1]) - self.pos[1])
+        } else {
+            (0.0, 0.0)
+        };
+        if dx != (0.0, 0.0) || dy != (0.0, 0.0) {
+            let min_x = dx.0.abs().min(dx.1.abs());
+            let min_y = dy.0.abs().min(dy.1.abs());
+            if min_x < min_y {
+                if dx.0.abs() < dx.1.abs() {
+                    if self.pos[0] + dx.0 > 0.0 {self.pos[0] += dx.0;} else {self.pos[0] += dx.1;}
+                } else {
+                    if self.pos[0] + dx.1 < size[0] {self.pos[0] += dx.1;} else {self.pos[0] += dx.0;}
+                }
+            } else {
+                if dy.0.abs() < dy.1.abs() {
+                    if self.pos[1] + dy.0 > 0.0 {self.pos[1] += dy.0;} else {self.pos[1] += dy.1;}
+                } else {
+                    if self.pos[1] + dy.1 < size[1] {self.pos[1] += dy.1;} else {self.pos[1] += dy.0;}
+                }
+            }
+        }
+    // --------------------------------------------------------------------------------------------
+    }
 }
