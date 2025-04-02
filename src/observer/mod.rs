@@ -36,15 +36,17 @@ pub struct Observer{
     pub renderer: *mut c_void,
 }
 
+pub struct ObserverContext{
+    pub renderer: *mut c_void,
+    pub playable: Collider,
+    pub objects: Vec<Collider>,
+    pub background: (u8, u8, u8, u8),
+    pub text: String,
+    pub point: [f32; 2]
+}
+
 impl Observer {
-    pub fn init(
-        sdl3: &mut SDL3,
-        playable: Collider,
-        scenes: HashMap<u64, Scene>,
-        size: [f32; 2],
-        iflags: u32,
-        wflags: u64
-    ) -> Self {
+    pub fn new(sdl3: &mut SDL3, playable: Collider, scenes: HashMap<u64, Scene>, size: [f32; 2], iflags: u32, wflags: u64) -> Self {
         // Инициализируем библиотеку SDL3
         sdl3_init(sdl3, iflags);
         // Инициализируем SDL3_ttf для шрифтов
@@ -66,7 +68,7 @@ impl Observer {
             events: events,
             keyboard: keyboard,
             window: window,
-            renderer: renderer
+            renderer: renderer,
         }
     }
     pub fn destroy(&self, sdl3: &mut SDL3){
@@ -79,5 +81,16 @@ impl Observer {
         // Закрвыаем библиотеку SDL3
         sdl3_quit(sdl3);
         println!("SDL3 ended!");
+    }
+    pub fn observer_to_artist_context(&self) -> ObserverContext {
+        ObserverContext
+        {
+            renderer: self.renderer,
+            playable: self.playable,
+            objects: self.scenes.get(&self.current_scene).unwrap().objects.clone(),
+            background: self.scenes.get(&self.current_scene).unwrap().background,
+            text: self.scenes.get(&self.current_scene).unwrap().text.clone(),
+            point: self.scenes.get(&self.current_scene).unwrap().point
+        }
     }
 }

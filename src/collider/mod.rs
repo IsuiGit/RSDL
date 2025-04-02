@@ -19,5 +19,11 @@ pub struct Collider{
     pub color: (u8, u8, u8, u8),
     pub pos: [f32; 2],
     pub size: [f32; 2],
-    pub velocity: [f32; 4],
+    pub velocity: f32
+}
+
+impl Collider{
+    pub fn new(type_: u32, span: u32, color: (u8, u8, u8, u8), pos: [f32; 2], size: [f32; 2], velocity: f32) -> Self {
+        Collider{type_: type_, span: span, color: color, pos: pos, size: size, velocity: velocity}
+    }
 }

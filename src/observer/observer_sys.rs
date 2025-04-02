@@ -38,7 +38,6 @@ impl Observer{
         self.size = size;
         // -----------------------------------------------------------------------------------------
     }
-
     fn resize_playable(&mut self, sc_x: f32, sc_y: f32){
         // Resizes the playable character based on the scaling factors.
         //
@@ -69,7 +68,6 @@ impl Observer{
         self.playable.pos[1] /= sc_y;
         // ----------------------------------------------------------------------------------------
     }
-
     fn resize_objects(&mut self, sc_x: f32, sc_y: f32){
         // Resizes all objects in the game based on the scaling factors.
         //

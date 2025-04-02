@@ -1,24 +1,18 @@
-use crate::artist::{
-    Artist,
-    artist_consts::*
-};
-use crate::sdl3::{
-    SDL3,
-    sdl3_render::*,
-    sdl3_structs::*
-};
+use crate::artist::{Artist, artist_consts::*};
+use crate::observer::ObserverContext;
+use crate::sdl3::{SDL3, sdl3_render::*, sdl3_structs::*, sdl3_ttf::*};
 use crate::collider::Collider;
 use std::ffi::c_void;
 
 impl Artist{
-    pub fn draw(
-        &self,
-        sdl3: &mut SDL3,
-        renderer: *mut c_void, 
-        playable: &Collider,
-        objects: &Vec<Collider>,
-        background: (u8, u8, u8, u8)
-    ) {
+    pub fn drawing(&self, sdl3: &mut SDL3, context: ObserverContext) {
+        self.draw_objects(sdl3, context.renderer, &context.playable, &context.objects, context.background);
+        if context.text.len() != 0 {
+            self.draw_text(sdl3, context.renderer, context.text, context.point);
+        }
+        sdl3_render_present(sdl3, context.renderer);
+    }
+    fn draw_objects(&self, sdl3: &mut SDL3, renderer: *mut c_void, playable: &Collider, objects: &Vec<Collider>, background: (u8, u8, u8, u8)) {
         // Renders the playable character and the surrounding objects on the screen.
         //
         // This function draws the playable character and all objects in the provided vector
@@ -71,7 +65,11 @@ impl Artist{
                 _ => {}
             }
         }
-        sdl3_render_present(sdl3, renderer);
         // ----------------------------------------------------------------------------------------
+    }
+    fn draw_text(&self, sdl3: &mut SDL3, renderer: *mut c_void, text: String, ptext: [f32; 2]) {
+        let engine = ttf_create_render_text_engine(sdl3, renderer);
+        let text = ttf_create_text(sdl3, engine, self.font, text.as_str());
+        ttf_draw_render_text(sdl3, text, ptext[0], ptext[1]);
     }
 }

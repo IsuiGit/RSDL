@@ -1,10 +1,4 @@
-use std::{
-    fmt::{Debug,Formatter,Result},
-    mem::ManuallyDrop,
-    ptr::drop_in_place,
-    os::raw::c_char,
-    ffi::c_void
-};
+use std::{fmt::{Debug,Formatter,Result}, mem::ManuallyDrop, ptr::drop_in_place, os::raw::c_char, ffi::c_void};
 // SDL3 EVENT UNION--------------------------------------------------------------------------------
 #[repr(C)]
 pub union SDL_Event {
@@ -619,5 +613,15 @@ pub struct SDL_FRect{
     pub y: f32,
     pub w: f32,
     pub h: f32,
+}
+// ------------------------------------------------------------------------------------------------
+
+// SDL3 COLOR STRUCT ------------------------------------------------------------------------------
+#[repr(C)]
+pub struct SDL_Color{
+    pub r: u8,
+    pub g: u8,
+    pub b: u8,
+    pub a: u8
 }
 // ------------------------------------------------------------------------------------------------

@@ -1,7 +1,4 @@
-use crate::collider::{
-    Collider,
-    Direction
-};
+use crate::collider::{Collider, Direction};
 
 impl Collider{
     pub fn direction_move(&mut self, max: [f32; 2], direction: Direction) {
@@ -37,28 +34,28 @@ impl Collider{
         //
         // - Ensure that the `global_collide` method is implemented correctly to accurately
         //   detect collisions with the boundaries.
-        // - The velocities (`vlx`, `vty`, `vrx`, `vby`) should be set appropriately to control
+        // - The velocity should be set appropriately to control
         //   the speed of movement in each direction.
         // code -----------------------------------------------------------------------------------
         match direction {
             Direction::Left => {
                 if !self.global_collide(max).0 {
-                    self.pos[0] -= self.velocity[0];
+                    self.pos[0] -= self.velocity;
                 }
             }
             Direction::Top => {
                 if !self.global_collide(max).1 {
-                    self.pos[1] -= self.velocity[1];
+                    self.pos[1] -= self.velocity;
                 }
             }
             Direction::Right => {
                 if !self.global_collide(max).2 {
-                    self.pos[0] += self.velocity[2];
+                    self.pos[0] += self.velocity;
                 }
             }
             Direction::Bottom => {
                 if !self.global_collide(max).3 {
-                    self.pos[1] += self.velocity[3];
+                    self.pos[1] += self.velocity;
                 }
             }
         }

@@ -4,10 +4,10 @@ mod observer;
 mod artist;
 mod screenwriter;
 
-mod rsdl_tests;
+mod tests;
 
 fn main(){
     println!("SDL MOVEMENT & SCENE RENDER TEST\nPRESS A/W/S/D KEYS TO MOVE");
-    rsdl_tests::sdl3_osa_system_test();
+    tests::sdl3_osa_system_test();
     println!("SDL RENDER PASSED");
 }

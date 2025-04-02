@@ -2,6 +2,7 @@
 use crate::sdl3::{
     SDL3,
     SDL_CreateRenderer,
+    SDL_CreateTextureFromSurface,
     SDL_SetRenderDrawColor,
     SDL_RenderClear,
     SDL_RenderPresent,
@@ -10,14 +11,15 @@ use crate::sdl3::{
     SDL_RenderRects,
     SDL_RenderFillRects,
     SDL_DestroyRenderer,
+    SDL_RenderTexture,
     sdl3_structs::*
 };
 // ------------------------------------------------------------------------------------------------
 // STANDART MODS-----------------------------------------------------------------------------------
 use libloading::Symbol;
-use std::ffi::{c_void, CString};
+use std::{ffi::{c_void, CString}, ptr::null};
 //-------------------------------------------------------------------------------------------------
-pub fn sdl3_create_renderer(sdl3: &mut SDL3, window: *mut c_void, name: &str) -> *mut c_void {
+pub fn sdl3_create_renderer(sdl3: &mut SDL3, window: *mut c_void, name: &str) -> *mut c_void{
     unsafe{
         let ptr_name = CString::new(name).unwrap();
         let _sdl3_create_renderer: Symbol<SDL_CreateRenderer> = sdl3.lib.get(b"SDL_CreateRenderer")
@@ -26,7 +28,15 @@ pub fn sdl3_create_renderer(sdl3: &mut SDL3, window: *mut c_void, name: &str) ->
     }
 }
 
-pub fn sdl3_set_render_draw_color(sdl3: &mut SDL3, render: *mut c_void, r: u8, g: u8, b: u8, a: u8) -> bool {
+pub fn sdl3_create_texture_from_surface(sdl3: &mut SDL3, render: *mut c_void, surface: *mut c_void) -> *mut c_void{
+    unsafe{
+        let _sdl3_create_texture_from_surface: Symbol<SDL_CreateTextureFromSurface> = sdl3.lib.get(b"SDL_CreateTextureFromSurface")
+            .expect("Failed to get symbol SDL_CreateTextureFromSurface");
+        _sdl3_create_texture_from_surface(render, surface)
+    }
+}
+
+pub fn sdl3_set_render_draw_color(sdl3: &mut SDL3, render: *mut c_void, r: u8, g: u8, b: u8, a: u8) -> bool{
     unsafe {
         let _sdl3_set_render_deaw_color: Symbol<SDL_SetRenderDrawColor> = sdl3.lib.get(b"SDL_SetRenderDrawColor")
             .expect("Failed to get symbol SDL_SetRenderDrawColor");
@@ -34,7 +44,7 @@ pub fn sdl3_set_render_draw_color(sdl3: &mut SDL3, render: *mut c_void, r: u8, g
     }
 }
 
-pub fn sdl3_render_clear(sdl3: &mut SDL3, render: *mut c_void) -> bool {
+pub fn sdl3_render_clear(sdl3: &mut SDL3, render: *mut c_void) -> bool{
     unsafe {
         let _sdl3_render_clear: Symbol<SDL_RenderClear> = sdl3.lib.get(b"SDL_RenderClear")
             .expect("Failed to get symbol SDL_RenderClear");
@@ -42,7 +52,7 @@ pub fn sdl3_render_clear(sdl3: &mut SDL3, render: *mut c_void) -> bool {
     }
 }
 
-pub fn sdl3_render_present(sdl3: &mut SDL3, render: *mut c_void) -> bool {
+pub fn sdl3_render_present(sdl3: &mut SDL3, render: *mut c_void) -> bool{
     unsafe {
         let _sdl3_render_present: Symbol<SDL_RenderPresent> = sdl3.lib.get(b"SDL_RenderPresent")
             .expect("Failed to get symbol SDL_RenderPresent");
@@ -69,7 +79,7 @@ pub fn sdl3_render_fill_rect(sdl3: &mut SDL3, render: *mut c_void, rect: *const 
 pub fn sdl3_render_rects(sdl3: &mut SDL3, render: *mut c_void, rect: *const SDL_FRect, count: i32) -> bool{
     unsafe{
         let _sdl3_render_rects: Symbol<SDL_RenderRects> = sdl3.lib.get(b"SDL_RenderRects")
-            .expect("Failed to get symbil SDL_RenderRects");
+            .expect("Failed to get symbol SDL_RenderRects");
         _sdl3_render_rects(render, rect, count)
     }
 }
@@ -77,12 +87,33 @@ pub fn sdl3_render_rects(sdl3: &mut SDL3, render: *mut c_void, rect: *const SDL_
 pub fn sdl3_render_fill_rects(sdl3: &mut SDL3, render: *mut c_void, rect: *const SDL_FRect, count: i32) -> bool{
     unsafe{
         let _sdl3_render_fill_rects: Symbol<SDL_RenderFillRects> = sdl3.lib.get(b"SDL_RenderFillRects")
-            .expect("Failed to get symbold SDL_RenderFillRects");
+            .expect("Failed to get symbol SDL_RenderFillRects");
         _sdl3_render_fill_rects(render, rect, count)
     }
 }
 
-pub fn sdl3_destroy_renderer(sdl3: &mut SDL3, renderer: *mut c_void) {
+pub fn sdl3_render_texture(
+    sdl3: &mut SDL3,
+    render: *mut c_void,
+    texture: *mut c_void,
+    srcrect: Option<*const SDL_FRect>,
+    dstrect: Option<*const SDL_FRect>
+) -> bool{
+    unsafe{
+        let _sdl3_render_texture: Symbol<SDL_RenderTexture> = sdl3.lib.get(b"SDL_RenderTexture")
+            .expect("Failed to get symbol SDL_RenderTexture");
+        match srcrect.is_some() && dstrect.is_some() {
+            true => {
+                _sdl3_render_texture(render, texture, srcrect.unwrap(), dstrect.unwrap())
+            },
+            false => {
+                _sdl3_render_texture(render, texture, null(), null())
+            }
+        }
+    }
+}
+
+pub fn sdl3_destroy_renderer(sdl3: &mut SDL3, renderer: *mut c_void){
     unsafe {
         let _sdl3_destroy_renderer: Symbol<SDL_DestroyRenderer> = sdl3.lib.get(b"SDL_DestroyRenderer")
             .expect("Failed to get symbol SDL_DestroyRenderer");

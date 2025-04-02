@@ -5,6 +5,7 @@ pub mod sdl3_structs;
 pub mod sdl3_sys;
 pub mod sdl3_window;
 pub mod sdl3_render;
+pub mod sdl3_ttf;
 
 use sdl3_types::*;
 // ------------------------------------------------------------------------------------------------

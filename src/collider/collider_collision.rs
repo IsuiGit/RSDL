@@ -53,15 +53,34 @@ impl Collider{
         (dx * dx + dy * dy).sqrt()
         // ----------------------------------------------------------------------------------------
     }
-
-    pub fn nearest_edge(&mut self, size: [f32; 2], object: &Collider) {
+    pub fn overlap(&mut self, size: [f32; 2], object: &Collider) {
         // ----------------------------------------------------------------------------------------
+        // Adjusts the position of the object to the nearest edge of the specified collider if the object is
+        // detected to be overlapping with it. The function calculates the distances to the left and right
+        // edges (dx) and the top and bottom edges (dy) of the collider. If the object is inside the collider,
+        // it determines which edge is closest and moves the object accordingly.
+        //
+        // # Parameters
+        // - `size`: An array of two `f32` values representing the width and height of the window.
+        // - `object`: A reference to a `Collider` object that represents the collider to check against.
+        //
+        // # Logic
+        // - The function first checks if the distance to the collider is zero, indicating an overlap.
+        // - It calculates the distances to the left and right edges (dx) and the top and bottom edges (dy)
+        //   of the collider. If the object is not overlapping, both dx and dy are set to (0.0, 0.0).
+        // - If either dx or dy is not zero, it calculates the minimum distance to the edges.
+        // - It then determines whether the object should be moved horizontally or vertically based on the
+        //   minimum distance. The object is moved towards the nearest edge while ensuring it remains within
+        //   the bounds defined by its size.
+        //
+        // # Note
+        // - The function uses absolute values to compare distances and ensure that the object is moved in the
+        //   correct direction. It also checks the object's position to prevent it from moving out of bounds.
         let dx = if self.distance_to(object) == 0.0 {
             (object.pos[0] - (self.pos[0] + self.size[0]), (object.pos[0] + object.size[0]) - self.pos[0])
         } else {
             (0.0, 0.0)
         };
-
         let dy = if self.distance_to(object) == 0.0 {
             (object.pos[1] - (self.pos[1] + self.size[1]), (object.pos[1] + object.size[1]) - self.pos[1])
         } else {
@@ -83,6 +102,9 @@ impl Collider{
                     if self.pos[1] + dy.1 < size[1] {self.pos[1] += dy.1;} else {self.pos[1] += dy.0;}
                 }
             }
+            // Optional: Clamp the position to ensure it stays within bounds
+            self.pos[0] = self.pos[0].max(0.0).min(size[0]);
+            self.pos[1] = self.pos[1].max(0.0).min(size[1]);
         }
     // --------------------------------------------------------------------------------------------
     }

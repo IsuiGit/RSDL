@@ -1,18 +1,6 @@
-use crate::observer::{
-    Observer,
-    observer_consts::*
-};
-use crate::collider::{
-    Collider,
-    Direction,
-    collider_consts::*,
-};
-use crate::sdl3::{
-    SDL3,
-    sdl3_consts::*,
-    sdl3_structs::SDL_Event,
-    sdl3_sys::sdl3_push_event,
-};
+use crate::observer::{Observer, observer_consts::*};
+use crate::collider::{Collider, Direction, collider_consts::*};
+use crate::sdl3::{SDL3, sdl3_consts::*, sdl3_structs::SDL_Event, sdl3_sys::sdl3_push_event};
 use std::{mem::zeroed, thread, time::Duration};
 
 impl Observer {
@@ -51,14 +39,15 @@ impl Observer {
             return;
         }
 
+        for obj in &self.scenes.get(&self.current_scene).unwrap().objects{
+            self.playable.overlap(self.size, &obj);
+        }
+
         if self.events.contains(&self.keyboard.get(&OBSERVER_CHANGE_SCENE_EVENT).unwrap_or(&0)) {
             let next = self.scenes.get(&self.current_scene).unwrap().next_scene;
             if self.scenes.contains_key(&next){
                 self.current_scene = next;
                 thread::sleep(Duration::from_secs(1));
-            }
-            for obj in &self.scenes.get(&self.current_scene).unwrap().objects{
-                self.playable.nearest_edge(self.size, &obj);
             }
         }
 
@@ -71,53 +60,53 @@ impl Observer {
         }
 
         if self.events.contains(&self.keyboard.get(&OBSERVER_MOVE_LEFT_EVENT).unwrap_or(&0)){
-            let mut m_left = true;
+            let mut can_move = true;
             let direction = Direction::Left;
             for obj in &objects{
-                if self.playable.ray_cast(obj, direction.clone()) < self.playable.velocity[0]  && self.playable.distance_to(obj) == 0.0 {
-                    m_left = false;
+                if self.playable.ray_cast(obj, direction.clone()) < self.playable.velocity && self.playable.distance_to(obj) == 0.0 {
+                    can_move = false;
                 }
             }
-            if m_left{
+            if can_move{
                 self.playable.direction_move(self.size, direction.clone());
             }
         }
 
         if self.events.contains(&self.keyboard.get(&OBSERVER_MOVE_TOP_EVENT).unwrap_or(&0)){
-            let mut m_top = true;
+            let mut can_move = true;
             let direction = Direction::Top;
             for obj in &objects{
-                if self.playable.ray_cast(obj, direction.clone()) < self.playable.velocity[1]  && self.playable.distance_to(obj) == 0.0 {
-                    m_top = false;
+                if self.playable.ray_cast(obj, direction.clone()) < self.playable.velocity && self.playable.distance_to(obj) == 0.0 {
+                    can_move = false;
                 }
             }
-            if m_top{
+            if can_move{
                 self.playable.direction_move(self.size, direction.clone());
             }
         }
 
         if self.events.contains(&self.keyboard.get(&OBSERVER_MOVE_RIGHT_EVENT).unwrap_or(&0)){
-            let mut m_right = true;
+            let mut can_move = true;
             let direction = Direction::Right;
             for obj in &objects{
-                if self.playable.ray_cast(obj, direction.clone()) < self.playable.velocity[2]  && self.playable.distance_to(obj) == 0.0 {
-                    m_right = false;
+                if self.playable.ray_cast(obj, direction.clone()) < self.playable.velocity && self.playable.distance_to(obj) == 0.0 {
+                    can_move = false;
                 }
             }
-            if m_right{
+            if can_move{
                 self.playable.direction_move(self.size, direction.clone());
             }
         }
 
         if self.events.contains(&self.keyboard.get(&OBSERVER_MOVE_BOTTOM_EVENT).unwrap_or(&0)){
-            let mut m_bottom = true;
+            let mut can_move = true;
             let direction = Direction::Bottom;
             for obj in &objects{
-                if self.playable.ray_cast(obj, direction.clone()) < self.playable.velocity[3] && self.playable.distance_to(obj) == 0.0 {
-                    m_bottom = false;
+                if self.playable.ray_cast(obj, direction.clone()) < self.playable.velocity && self.playable.distance_to(obj) == 0.0 {
+                    can_move = false;
                 }
             }
-            if m_bottom{
+            if can_move{
                 self.playable.direction_move(self.size, direction.clone());
             }
         }

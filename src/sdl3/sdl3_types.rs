@@ -1,8 +1,5 @@
 use crate::sdl3::sdl3_structs::*;
-use std::{
-    ffi::c_void,
-    os::raw::c_char
-};
+use std::{ffi::{c_void, c_char}};
 // SDL3 types register
 
 // SDL3_TTF Types ---------------------------------------------------------------------------------
@@ -60,4 +57,22 @@ pub type SDL_RenderFillRect = unsafe extern "C" fn(*mut c_void, *const SDL_FRect
 pub type SDL_RenderRects = unsafe extern "C" fn(*mut c_void, *const SDL_FRect, i32) -> bool;
 // SDL3_RenderFillRects
 pub type SDL_RenderFillRects = unsafe extern "C" fn(*mut c_void, *const SDL_FRect, i32) -> bool;
+// SDL3_CreateTextureFromSurface
+pub type SDL_CreateTextureFromSurface = unsafe extern "C" fn(*mut c_void, *mut c_void) -> *mut c_void;
+// SDL3_RenderTexture
+pub type SDL_RenderTexture = unsafe extern "C" fn(*mut c_void, *mut c_void, *const SDL_FRect, *const SDL_FRect) -> bool;
 // ------------------------------------------------------------------------------------------------
+
+// SDL3 TTF types ---------------------------------------------------------------------------------
+// TTF_OpenFont
+pub type TTF_OpenFont = unsafe extern "C" fn(*const c_char, f32) -> *mut c_void;
+// TTF_CloseFont
+pub type TTF_CloseFont = unsafe extern "C" fn(*mut c_void);
+// TTF_RenderText_Blended
+pub type TTF_RenderText_Blended = unsafe extern "C" fn(*mut c_void, *const c_char, usize, SDL_Color) -> *mut c_void;
+// TTF_CreateRenderTextEngine
+pub type TTF_CreateRendererTextEngine = unsafe extern "C" fn(*mut c_void) -> *mut c_void;
+// TTF_CreateText
+pub type TTF_CreateText = unsafe extern "C" fn(*mut c_void, *mut c_void, *const c_char, usize) -> *mut c_void;
+// TTF_DrawRenderText
+pub type TTF_DrawRendererText = unsafe extern "C" fn(*mut c_void, f32, f32) -> bool;

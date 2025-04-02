@@ -1,7 +1,4 @@
-use crate::collider::{
-    Collider,
-    Direction
-};
+use crate::collider::{Collider, Direction};
 
 impl Collider {
     pub fn ray_cast(&self, object: &Collider, direction: Direction) -> f32 {
