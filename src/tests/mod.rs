@@ -24,18 +24,9 @@ pub fn sdl3_osa_system_test(){
             Collider::new(COLLIDER_BLOCK, ARTIST_RECTANGLE, (117, 45, 112, 255), [1111.0, 243.0], [200.0, 950.0], 0.0),
             Collider::new(COLLIDER_BLOCK, ARTIST_RECTANGLE, (17, 145, 112, 255), [284.0, 650.0], [1300.0, 200.0], 0.0)
         ],
-        1,
-        (0, 0, 0, 255),
-        String::from("Press Q to change scene"),
-        [1580.0, 40.0]
+        1, (0, 0, 0, 255), String::from("Q to change scene\nWASD to move\nESC to exit"), [1670.0, 20.0]
     );
-    let scene_1 = Scene::new(
-        vec![],
-        0,
-        (0, 0, 0, 255),
-        String::from("Press Q to change scene"),
-        [1580.0, 40.0]
-    );
+    let scene_1 = Scene::new(vec![], 0, (0, 0, 0, 255), String::from("Q to change scene\nWASD to move\nESC to exit"), [1670.0, 20.0]);
     // --------------------------------------------------------------------------------------------
     // Добавляем сцены в структуру сцен -----------------------------------------------------------
     scenes.insert(0, scene_0);

@@ -1,5 +1,7 @@
 use crate::collider::Collider;
 
+mod screenwriter_text;
+
 #[derive(Debug)]
 pub struct Scene{
     pub objects: Vec<Collider>,

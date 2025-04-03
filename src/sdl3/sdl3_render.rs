@@ -12,7 +12,8 @@ use crate::sdl3::{
     SDL_RenderFillRects,
     SDL_DestroyRenderer,
     SDL_RenderTexture,
-    sdl3_structs::*
+    sdl3_structs::*,
+    sdl3_sys::sdl3_get_error
 };
 // ------------------------------------------------------------------------------------------------
 // STANDART MODS-----------------------------------------------------------------------------------
@@ -24,7 +25,8 @@ pub fn sdl3_create_renderer(sdl3: &mut SDL3, window: *mut c_void, name: &str) ->
         let ptr_name = CString::new(name).unwrap();
         let _sdl3_create_renderer: Symbol<SDL_CreateRenderer> = sdl3.lib.get(b"SDL_CreateRenderer")
             .expect("Failed to get symbol SDL_CreateRenderer");
-        _sdl3_create_renderer(window, ptr_name.as_ptr())
+        let renderer = _sdl3_create_renderer(window, ptr_name.as_ptr());
+        if !renderer.is_null(){ renderer } else { panic!("SDL3 could not create renderer! SDL_Error: {}", sdl3_get_error(sdl3)); }
     }
 }
 
@@ -32,7 +34,8 @@ pub fn sdl3_create_texture_from_surface(sdl3: &mut SDL3, render: *mut c_void, su
     unsafe{
         let _sdl3_create_texture_from_surface: Symbol<SDL_CreateTextureFromSurface> = sdl3.lib.get(b"SDL_CreateTextureFromSurface")
             .expect("Failed to get symbol SDL_CreateTextureFromSurface");
-        _sdl3_create_texture_from_surface(render, surface)
+        let texture = _sdl3_create_texture_from_surface(render, surface);
+        if !texture.is_null(){ texture } else { panic!("SDL3 could not create texture! SDL_Error: {}", sdl3_get_error(sdl3)); }
     }
 }
 
