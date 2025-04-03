@@ -20,7 +20,7 @@ use crate::observer::Observer;
 use crate::screenwriter::Scene;
 
 /// Main function to test the SDL3 game system using RSDL.
-pub fn sdl3_osa_system_test() {
+fn main() {
     // Create an instance of the SDL3 library
     let mut sdl3 = SDL3::new();
 
