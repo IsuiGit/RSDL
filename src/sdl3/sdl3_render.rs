@@ -97,7 +97,7 @@ pub fn sdl3_render_fill_rects(sdl3: &mut SDL3, render: *mut c_void, rect: *const
 
 pub fn sdl3_render_texture(
     sdl3: &mut SDL3,
-    render: *mut c_void,
+    renderer: *mut c_void,
     texture: *mut c_void,
     srcrect: Option<*const SDL_FRect>,
     dstrect: Option<*const SDL_FRect>
@@ -105,14 +105,9 @@ pub fn sdl3_render_texture(
     unsafe{
         let _sdl3_render_texture: Symbol<SDL_RenderTexture> = sdl3.lib.get(b"SDL_RenderTexture")
             .expect("Failed to get symbol SDL_RenderTexture");
-        match srcrect.is_some() && dstrect.is_some() {
-            true => {
-                _sdl3_render_texture(render, texture, srcrect.unwrap(), dstrect.unwrap())
-            },
-            false => {
-                _sdl3_render_texture(render, texture, null(), null())
-            }
-        }
+        let t_srcrect = match srcrect.is_some(){ true => { srcrect }, false => { Some(null()) } };
+        let t_dstrect = match dstrect.is_some(){ true => { dstrect }, false => { Some(null()) } };
+        _sdl3_render_texture(renderer, texture, t_srcrect.unwrap(), t_dstrect.unwrap())
     }
 }
 

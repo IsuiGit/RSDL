@@ -12,18 +12,19 @@ pub enum Direction {
     Bottom,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Default)]
+#[derive(Clone, Debug, PartialEq, Default)]
 pub struct Collider{
     pub type_: u32,
     pub span: u32,
     pub color: (u8, u8, u8, u8),
+    pub image: String,
     pub pos: [f32; 2],
     pub size: [f32; 2],
     pub velocity: f32
 }
 
 impl Collider{
-    pub fn new(type_: u32, span: u32, color: (u8, u8, u8, u8), pos: [f32; 2], size: [f32; 2], velocity: f32) -> Self {
+    pub fn new(type_: u32, span: u32, color: (u8, u8, u8, u8), image: &str, pos: [f32; 2], size: [f32; 2], velocity: f32) -> Self {
         // Creates a new instance of the `Collider` struct.
         //
         // This function initializes a `Collider` object with the specified properties, including its
@@ -49,7 +50,7 @@ impl Collider{
         // The `pos` and `size` should be set according to the intended placement and dimensions of
         // the collider in the game world.
         // code -----------------------------------------------------------------------------------
-        Collider{type_: type_, span: span, color: color, pos: pos, size: size, velocity: velocity}
+        Collider{type_: type_, span: span, color: color, image: image.to_string(), pos: pos, size: size, velocity: velocity}
         // ----------------------------------------------------------------------------------------
     }
 }

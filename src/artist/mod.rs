@@ -1,12 +1,19 @@
 mod artist_draw;
 pub mod artist_consts;
 
-use crate::sdl3::SDL3;
+use crate::screenwriter::Scene;
+use crate::collider::Collider;
+use crate::sdl3::{SDL3, sdl3_render::*, sdl3_image::*};
 use crate::sdl3::sdl3_ttf::{ttf_open_font, ttf_close_font};
-use std::ffi::c_void;
+use std::{ffi::c_void, collections::HashMap};
 
 pub struct Artist{
     pub font: *mut c_void
+}
+
+#[derive(Clone)]
+pub struct ArtistCache{
+    pub cache: HashMap<String, *mut c_void>
 }
 
 impl Artist{
@@ -58,5 +65,52 @@ impl Artist{
         // code -----------------------------------------------------------------------------------
         ttf_close_font(sdl3, self.font);
         // ----------------------------------------------------------------------------------------
+    }
+}
+
+impl ArtistCache{
+    pub fn new(sdl3: &mut SDL3, renderer: *mut c_void, playable: &Collider, scene: Scene) -> Self{
+        // Creates a new instance of `ArtistCache`, which is responsible for caching textures
+        // for the playable character and the objects in the scene.
+        //
+        // # Parameters
+        //
+        // - `sdl3`: A mutable reference to the SDL3 context, which manages the graphical operations.
+        // - `renderer`: A pointer to the SDL renderer used for drawing textures on the screen.
+        // - `playable`: A reference to the `Collider` object representing the playable character,
+        //   which contains information about its associated image.
+        // - `scene`: An instance of `Scene`, which contains a collection of objects to be rendered.
+        //
+        // # Logic
+        //
+        // 1. Initializes a new `HashMap` to store cached textures, where the keys are image paths
+        //    and the values are pointers to the corresponding SDL textures.
+        // 2. Checks if the texture for the playable character's image is already cached. If not,
+        //    it loads the image using `img_load`, creates a texture from the loaded surface using
+        //    `sdl3_create_texture_from_surface`, and inserts the texture into the cache.
+        // 3. Iterates over the objects in the provided scene. For each object, it checks if the
+        //    texture for the object's image is already cached. If not, it performs the same loading
+        //    and caching process as for the playable character.
+        // 4. Returns a new instance of `ArtistCache` containing the populated texture cache.
+        //
+        // # Notes
+        //
+        // This implementation helps to optimize rendering performance by avoiding redundant
+        // image loading and texture creation, ensuring that each unique image is only processed
+        // once and reused throughout the rendering process.
+        let mut cache: HashMap<String, *mut c_void> = HashMap::new();
+        if !cache.contains_key(&playable.image){
+            let playable_img = img_load(sdl3, playable.image.as_str());
+            let texture = sdl3_create_texture_from_surface(sdl3, renderer, playable_img);
+            cache.insert(playable.image.clone(), texture);
+        }
+        for obj in &scene.objects{
+            if !cache.contains_key(&obj.image){
+                let obj_img = img_load(sdl3, obj.image.as_str());
+                let texture = sdl3_create_texture_from_surface(sdl3, renderer, obj_img);
+                cache.insert(obj.image.clone(), texture);
+            }
+        }
+        ArtistCache{ cache }
     }
 }

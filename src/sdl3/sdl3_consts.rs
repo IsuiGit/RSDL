@@ -97,3 +97,13 @@ pub const SDL_SURFACE_LOCK_NEEDED: u32 = 0x00000002;
 pub const SDL_SURFACE_LOCKED: u32 = 0x00000004;
 pub const SDL_SURFACE_SIMD_ALIGNED: u32 = 0x00000008;
 // ------------------------------------------------------------------------------------------------
+
+// SDL3 PIXEL FORMATS START------------------------------------------------------------------------
+pub const SDL_PIXELFORMAT_RGBA8888: u32 = 0x16462004;
+// ------------------------------------------------------------------------------------------------
+
+// SDL3 TEXTURE ACCESS START-----------------------------------------------------------------------
+pub const SDL_TEXTUREACCESS_STATIC: u32 = 0;
+pub const SDL_TEXTUREACCESS_STREAMING: u32 = 1;
+pub const SDL_TEXTUREACCESS_TARGET: u32 = 2;
+// ------------------------------------------------------------------------------------------------

@@ -1,6 +1,6 @@
-use crate::artist::{Artist, artist_consts::*};
+use crate::artist::{Artist, ArtistCache, artist_consts::*};
 use crate::observer::ObserverContext;
-use crate::sdl3::{SDL3, sdl3_render::*, sdl3_structs::*, sdl3_ttf::*};
+use crate::sdl3::{SDL3, sdl3_render::*, sdl3_structs::*, sdl3_ttf::*, sdl3_image::*};
 use crate::collider::Collider;
 use std::ffi::c_void;
 
@@ -41,14 +41,22 @@ impl Artist{
         // Ensure that the passed parameters are valid and that the SDL3 context and renderer are
         // initialized before calling this function. Incorrect parameters may lead to rendering errors.
         // code -----------------------------------------------------------------------------------
-        self.draw_objects(sdl3, context.renderer, &context.playable, &context.objects, context.background);
+        self.draw_objects(sdl3, context.renderer, &context.playable, &context.objects, context.background, context.cache);
         if context.text.len() != 0 {
             self.draw_text(sdl3, context.renderer, context.text, context.point);
         }
         sdl3_render_present(sdl3, context.renderer);
         // ----------------------------------------------------------------------------------------
     }
-    fn draw_objects(&self, sdl3: &mut SDL3, renderer: *mut c_void, playable: &Collider, objects: &Vec<Collider>, background: (u8, u8, u8, u8)) {
+    fn draw_objects(
+        &self,
+        sdl3: &mut SDL3,
+        renderer: *mut c_void,
+        playable: &Collider,
+        objects: &Vec<Collider>,
+        background: (u8, u8, u8, u8),
+        cache: ArtistCache
+    ) {
         // Renders game objects and the playable character on the screen.
         //
         // This function is responsible for setting the rendering color, clearing the screen,
@@ -92,6 +100,16 @@ impl Artist{
                 sdl3_set_render_draw_color(sdl3, renderer, playable.color.0, playable.color.1, playable.color.2, playable.color.3);
                 sdl3_render_fill_rect(sdl3, renderer, &rect as *const SDL_FRect);
             },
+            ARTIST_IMAGE => {
+                let playable_texture = cache.cache.get(&playable.image).unwrap();
+                sdl3_render_texture(
+                    sdl3,
+                    renderer,
+                    playable_texture.clone(),
+                    None,
+                    Some(&SDL_FRect{x: playable.pos[0], y: playable.pos[1], w: playable.size[0], h: playable.size[1]} as *const SDL_FRect)
+                );
+            },
             _ => {}
         }
         for obj in objects{
@@ -100,6 +118,16 @@ impl Artist{
                     let rect = SDL_FRect{x: obj.pos[0], y: obj.pos[1], w: obj.size[0], h: obj.size[1]};
                     sdl3_set_render_draw_color(sdl3, renderer, obj.color.0, obj.color.1, obj.color.2, obj.color.3);
                     sdl3_render_fill_rect(sdl3, renderer, &rect as *const SDL_FRect);
+                },
+                ARTIST_IMAGE => {
+                    let obj_texture = cache.cache.get(&obj.image).unwrap();
+                    sdl3_render_texture(
+                        sdl3,
+                        renderer,
+                        obj_texture.clone(),
+                        None,
+                        Some(&SDL_FRect{x: obj.pos[0], y: obj.pos[1], w: obj.size[0], h: obj.size[1]} as *const SDL_FRect)
+                    );
                 },
                 _ => {}
             }

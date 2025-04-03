@@ -1,5 +1,6 @@
 use crate::collider::Collider;
 use crate::screenwriter::Scene;
+use crate::artist::ArtistCache;
 use std::{collections::{HashSet, HashMap}, ffi::c_void};
 use crate::sdl3::{
     SDL3,
@@ -33,6 +34,7 @@ pub struct Observer{
     pub keyboard: HashMap<u16, u32>,
     pub window: *mut c_void,
     pub renderer: *mut c_void,
+    pub cache: ArtistCache,
 }
 
 pub struct ObserverContext{
@@ -41,7 +43,8 @@ pub struct ObserverContext{
     pub objects: Vec<Collider>,
     pub background: (u8, u8, u8, u8),
     pub text: String,
-    pub point: [f32; 2]
+    pub point: [f32; 2],
+    pub cache: ArtistCache
 }
 
 impl Observer {
@@ -93,6 +96,7 @@ impl Observer {
         if window.is_null(){sdl3_quit(sdl3); panic!("window pointer is null!");}
         let renderer = sdl3_create_renderer(sdl3, window, "");
         if renderer.is_null(){sdl3_destroy_window(sdl3, window); sdl3_quit(sdl3); panic!("renderer pointer is null!");}
+        let cache = ArtistCache::new(sdl3, renderer, &playable, scenes.get(&0).unwrap().clone());
         Observer {
             playable: playable,
             scenes: scenes,
@@ -102,6 +106,7 @@ impl Observer {
             keyboard: keyboard,
             window: window,
             renderer: renderer,
+            cache: cache
         }
         // ----------------------------------------------------------------------------------------
     }
@@ -162,11 +167,12 @@ impl Observer {
         ObserverContext
         {
             renderer: self.renderer,
-            playable: self.playable,
+            playable: self.playable.clone(),
             objects: self.scenes.get(&self.current_scene).unwrap().objects.clone(),
             background: self.scenes.get(&self.current_scene).unwrap().background,
             text: self.scenes.get(&self.current_scene).unwrap().text.clone(),
-            point: self.scenes.get(&self.current_scene).unwrap().point
+            point: self.scenes.get(&self.current_scene).unwrap().point,
+            cache: self.cache.clone()
         }
         // ----------------------------------------------------------------------------------------
     }

@@ -1,5 +1,6 @@
 use crate::observer::{Observer, observer_consts::*};
 use crate::collider::{Collider, Direction, collider_consts::*};
+use crate::artist::ArtistCache;
 use crate::sdl3::{SDL3, sdl3_consts::*, sdl3_structs::SDL_Event, sdl3_sys::sdl3_push_event};
 use std::{mem::zeroed, thread, time::Duration};
 
@@ -55,6 +56,7 @@ impl Observer {
             let next = self.scenes.get(&self.current_scene).unwrap().next_scene;
             if self.scenes.contains_key(&next){
                 self.current_scene = next;
+                self.cache = ArtistCache::new(sdl3, self.renderer, &self.playable, self.scenes.get(&next).unwrap().clone());
                 thread::sleep(Duration::from_secs(1));
             }
         }

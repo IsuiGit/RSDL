@@ -76,3 +76,11 @@ pub type TTF_CreateRendererTextEngine = unsafe extern "C" fn(*mut c_void) -> *mu
 pub type TTF_CreateText = unsafe extern "C" fn(*mut c_void, *mut c_void, *const c_char, usize) -> *mut c_void;
 // TTF_DrawRenderText
 pub type TTF_DrawRendererText = unsafe extern "C" fn(*mut c_void, f32, f32) -> bool;
+// ------------------------------------------------------------------------------------------------
+
+// SDL3 IMAGE types -------------------------------------------------------------------------------
+// IMG_LoadTexture type
+pub type IMG_LoadTexture = unsafe extern "C" fn(*mut c_void, *const c_char) -> *mut c_void;
+// IMG_Load type
+pub type IMG_Load = unsafe extern "C" fn(*const c_char) -> *mut c_void;
+// ------------------------------------------------------------------------------------------------

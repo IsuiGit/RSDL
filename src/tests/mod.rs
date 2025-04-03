@@ -5,12 +5,12 @@ use std::{collections::HashMap, mem::zeroed};
 use crate::observer::Observer;
 use crate::screenwriter::Scene;
 
-pub fn sdl3_osa_system_test(){
+pub fn sdl3_main_test(){
     // Создаем экземпляр библиотек ----------------------------------------------------------------
     let mut sdl3 = SDL3::new();
     // --------------------------------------------------------------------------------------------
     // Создание "играбельного объекта"-------------------------------------------------------------
-    let playable = Collider::new(COLLIDER_PLAYABLE, ARTIST_RECTANGLE, (255, 255, 255, 255), [100.0, 100.0], [50.0, 50.0], 5.0);
+    let playable = Collider::new(COLLIDER_PLAYABLE, ARTIST_IMAGE, (255, 255, 255, 255), "", [100.0, 100.0], [64.0, 64.0], 5.0);
     // --------------------------------------------------------------------------------------------
     // Создание структуры "наблюдателя", с содержимым в виде "играбельного" объекта, окружения
     // сцены, окна и настроек по умолчанию (default)-----------------------------------------------
@@ -19,10 +19,10 @@ pub fn sdl3_osa_system_test(){
     // Создаем сцены игры -------------------------------------------------------------------------
     let scene_0 = Scene::new(
         vec![
-            Collider::new(COLLIDER_BLOCK, ARTIST_RECTANGLE, (127, 65, 250, 255), [0.0, 0.0], [300.0, 150.0], 0.0),
-            Collider::new(COLLIDER_BLOCK, ARTIST_RECTANGLE, (172, 45, 112, 255), [400.0, 552.0], [200.0, 650.0], 0.0),
-            Collider::new(COLLIDER_BLOCK, ARTIST_RECTANGLE, (117, 45, 112, 255), [1111.0, 243.0], [200.0, 950.0], 0.0),
-            Collider::new(COLLIDER_BLOCK, ARTIST_RECTANGLE, (17, 145, 112, 255), [284.0, 650.0], [1300.0, 200.0], 0.0)
+            Collider::new(COLLIDER_BLOCK, ARTIST_IMAGE, (127, 65, 250, 255), "", [0.0, 0.0], [300.0, 150.0], 0.0),
+            Collider::new(COLLIDER_BLOCK, ARTIST_IMAGE, (172, 45, 112, 255), "", [400.0, 552.0], [200.0, 650.0], 0.0),
+            Collider::new(COLLIDER_BLOCK, ARTIST_IMAGE, (117, 45, 112, 255), "", [1111.0, 243.0], [200.0, 950.0], 0.0),
+            Collider::new(COLLIDER_BLOCK, ARTIST_IMAGE, (17, 145, 112, 255), "", [284.0, 650.0], [1300.0, 200.0], 0.0)
         ],
         1, (0, 0, 0, 255), String::from("Q to change scene\nWASD to move\nESC to exit"), [1670.0, 20.0]
     );

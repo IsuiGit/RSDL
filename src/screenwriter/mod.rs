@@ -2,7 +2,7 @@ use crate::collider::Collider;
 
 mod screenwriter_text;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Scene{
     pub objects: Vec<Collider>,
     pub next_scene: u64,

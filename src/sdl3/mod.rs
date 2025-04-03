@@ -6,6 +6,7 @@ pub mod sdl3_sys;
 pub mod sdl3_window;
 pub mod sdl3_render;
 pub mod sdl3_ttf;
+pub mod sdl3_image;
 
 use sdl3_types::*;
 // ------------------------------------------------------------------------------------------------
@@ -16,7 +17,8 @@ use std::path::Path;
 // SDL3 MAIN STRUCT--------------------------------------------------------------------------------
 pub struct SDL3{
     lib: Library,
-    ttf_lib: Library
+    ttf_lib: Library,
+    img_lib: Library
 }
 // ------------------------------------------------------------------------------------------------
 impl SDL3{
@@ -26,7 +28,9 @@ impl SDL3{
                 .expect("Failed to load SDL3.dll");
             let ttf_lib = Library::new(Path::new("src/sdl3/bin/SDL3_ttf.dll"))
                 .expect("Failed to load SDL3_ttf.dll");
-            SDL3 {lib: lib, ttf_lib: ttf_lib}
+            let img_lib = Library::new(Path::new("src/sdl3/bin/SDL3_image.dll"))
+                .expect("Failed to load SDL3_image.dll");
+            SDL3 {lib: lib, ttf_lib: ttf_lib, img_lib: img_lib}
         }
     }
 }
