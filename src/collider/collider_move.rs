@@ -25,10 +25,10 @@ impl Collider{
         // - For each direction, it checks if moving in that direction would result in a
         //   collision with the boundaries defined by `max` using the `global_collide` method.
         // - If no collision is detected, the object's position is updated accordingly:
-        //  - Moving left decreases the x-coordinate by the object's left velocity (`vlx`).
-        //   - Moving up decreases the y-coordinate by the object's top velocity (`vty`).
-        //   - Moving right increases the x-coordinate by the object's right velocity (`vrx`).
-        //   - Moving down increases the y-coordinate by the object's bottom velocity (`vby`).
+        //  - Moving left decreases the x-coordinate by the object's left velocity (`velocity`).
+        //   - Moving up decreases the y-coordinate by the object's top velocity (`velocity`).
+        //   - Moving right increases the x-coordinate by the object's right velocity (`velocity`).
+        //   - Moving down increases the y-coordinate by the object's bottom velocity (`velocity`).
         //
         // # Notes
         //

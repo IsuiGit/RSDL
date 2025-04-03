@@ -54,7 +54,6 @@ impl Collider{
         // ----------------------------------------------------------------------------------------
     }
     pub fn overlap(&mut self, size: [f32; 2], object: &Collider) {
-        // ----------------------------------------------------------------------------------------
         // Adjusts the position of the object to the nearest edge of the specified collider if the object is
         // detected to be overlapping with it. The function calculates the distances to the left and right
         // edges (dx) and the top and bottom edges (dy) of the collider. If the object is inside the collider,
@@ -76,6 +75,7 @@ impl Collider{
         // # Note
         // - The function uses absolute values to compare distances and ensure that the object is moved in the
         //   correct direction. It also checks the object's position to prevent it from moving out of bounds.
+        // code -----------------------------------------------------------------------------------
         let dx = if self.distance_to(object) == 0.0 {
             (object.pos[0] - (self.pos[0] + self.size[0]), (object.pos[0] + object.size[0]) - self.pos[0])
         } else {
@@ -106,6 +106,6 @@ impl Collider{
             self.pos[0] = self.pos[0].max(0.0).min(size[0]);
             self.pos[1] = self.pos[1].max(0.0).min(size[1]);
         }
-    // --------------------------------------------------------------------------------------------
+        // ----------------------------------------------------------------------------------------
     }
 }

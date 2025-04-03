@@ -1,10 +1,4 @@
-use crate::sdl3::{
-    SDL3,
-    sdl3_consts::*,
-    sdl3_structs::*,
-    sdl3_sys::{sdl3_poll_event, sdl3_delay},
-    sdl3_window::sdl3_get_window_size,
-};
+use crate::sdl3::{SDL3, sdl3_consts::*, sdl3_structs::*, sdl3_sys::{sdl3_poll_event, sdl3_delay}, sdl3_window::sdl3_get_window_size};
 use crate::collider::{Collider, collider_consts::*};
 use crate::artist::{Artist, artist_consts::*};
 use std::{collections::HashMap, mem::zeroed};
@@ -33,14 +27,14 @@ pub fn sdl3_osa_system_test(){
         1,
         (0, 0, 0, 255),
         String::from("Press Q to change scene"),
-        [750.0, 76.0]
+        [1580.0, 40.0]
     );
     let scene_1 = Scene::new(
         vec![],
         0,
         (0, 0, 0, 255),
         String::from("Press Q to change scene"),
-        [750.0, 76.0]
+        [1580.0, 40.0]
     );
     // --------------------------------------------------------------------------------------------
     // Добавляем сцены в структуру сцен -----------------------------------------------------------

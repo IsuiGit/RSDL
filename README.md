@@ -1,314 +1,115 @@
 ### RSDL
 
-RSDL - учебный проект в рамках изучения языка `Rust`
+RSDL is a Rust library designed for 2D game development, simplifying graphics, sound, and input management. It offers a user-friendly interface for creating game objects, managing scenes, and handling events, allowing developers to focus on gameplay.
 
-Небольшой (очень) движок, использующий библиотеку SDL3.dll для рендеринга и собственную внутреннюю логику
+### Docs
 
-Последний билд движка с коллизиями и рендерингом в разделе `Realese` (необходимо скачать архив `build`, распаковать и запустить `.exe` файл)
+Check the [Wiki](https://github.com/IsuiGit/RSDL/wiki)
 
-### RSDL Modules
+### Structure and Example
 
-#### RSDL.collider
-
-- `mod`
-	- `pub struct Collider {type_, span, color, x, y, w, h, vlx, vty, vtx, vby}`
-	- `pub enum Direction {Left, Top, Right, Bottom}`
-	- `Collider.init(&mut self, vel f32)`
-- `collider_move`
-	- `Collider.direction_move(&mut self, max [f32; 2], direction Direction)`
-- `collider_sys`
-	- `Collider.global_collide(&self, max [f32; 2]) -> (bool, bool, bool, bool)`
-- `collider_ray`
-	- `Collider.ray_cast(&self, object &Colider, direction Direction) -> f32`
-- `collider_collision`
-	- `Collider.distance_to(&self, object &Collider) -> f32`
-
-#### RSDL.observer
-
-- `mod`
-	- `pub struct Observer {playable, objects, window, events}`
-- `observer_events`
-	- `Observer.proceed_events(&mut self)`
-- `observer_sys`
-	- `Observer.resize(&mut self, size [f32, 2])`
-
-#### RSDL.artist
-
-- `mod`
-	- `pub struct Artist{}`
-- `artist_draw`
-	- `Artist.draw(&self, sdl3 &mut SDL3, renderer *mut c_void, playable &Collider, objects &Vec<Collider>)`
-
-#### Collider
-
-##### `Collider.init(&mut self, vel: f32)`
-
-Инициализирует скорости перемещения объекта.
-
-Эта функция устанавливает значения скоростей перемещения объекта в четырех направлениях (влево, вверх, вправо и вниз) на основе переданного значения.
-
-###### Параметры
-
-- `vel`: Значение типа `f32`, представляющее скорость перемещения объекта в каждом направлении.
-
-###### Возвращаемое значение
-
-Функция не возвращает значения, но изменяет скорости перемещения объекта.
-
-###### Пример
+Here’s a structured example of how to use the RSDL library for developing a 2D game, based on the provided code. This example includes comments to explain each section of the code, making it easier to understand how the different components work together.
 
 ```rust
-let mut collider = Collider { x: 10.0, y: 10.0, w: 5.0, h: 5.0, vlx: 0.0, vty: 0.0, vrx: 0.0, vby: 0.0 };
-// Инициализация скоростей перемещения
-collider.init(5.0);
-
-println!("Initialized velocities: vlx: {}, vty: {}, vrx: {}, vby: {}", collider.vlx, collider.vty, collider.vrx, collider.vby);
-```
-
-###### Примечания
-
-- Все четыре скорости (`vlx`, `vty`, `vrx`, `vby`) будут установлены на одно и то же значение.
-- Эта функция может быть полезна для настройки начальных параметров объекта перед его использованием.
-
-##### `Collider.global_collide(&self, max: [f32; 2]) -> (bool, bool, bool, bool)`
-
-Проверяет глобальную коллизию объекта с границами окна.
-
-Эта функция определяет, выходит ли текущий коллайдер за границы заданного окна по четырем направлениям: влево, вверх, вправо и вниз.
-
-###### Параметры
-
-- `max`: Массив из двух элементов типа `f32`, представляющий максимальные размеры окна.
-	- `max[0]`: Ширина окна.
-	- `max[1]`: Высота окна.
-
-###### Возвращаемое значение
-
-Возвращает кортеж из четырех булевых значений:
-- `true`, если объект выходит за левую границу окна (x <= 0.0).
-- `true`, если объект выходит за верхнюю границу окна (y <= 0.0).
-- `true`, если объект выходит за правую границу окна (x + w >= max[0]).
-- `true`, если объект выходит за нижнюю границу окна (y + h >= max[1]).
-
-Если объект не выходит за соответствующую границу, возвращается `false`.
-
-###### Пример
-
-```rust
-let collider = Collider { x: -5.0, y: 10.0, w: 50.0, h: 50.0 };
-let window_size = [800.0, 600.0];
-
-let collision = collider.global_collide(window_size);
-println!("Collision: {:?}", collision); // Вывод: Collision: (true, false, false, false)
-```
-
-###### Примечания
-
-- Функция полезна для проверки коллизий с границами окна, чтобы предотвратить выход объектов за пределы видимой области.
-- Возвращаемые значения могут быть использованы для принятия решений о том, как обрабатывать столкновения с границами.
-
-##### `Collider.distance_to(&self, object: &Collider) -> f32
-
-Вычисляет расстояние между текущим коллайдером и другим коллайдером.
-
-Эта функция определяет расстояние между границами двух коллайдеров в 2D-пространстве, используя координаты верхнего левого угла и размеры (ширину и высоту) каждого коллайдера.
-Если коллайдеры пересекаются, функция возвращает 0.0.
-###### Параметры
-
-- `object`: Ссылка на другой коллайдер (`Collider`), с которым необходимо вычислить расстояние.
-
-###### Возвращаемое значение
-
-Возвращает расстояние в виде `f32` между текущим коллайдером и переданным коллайдером.
-Если коллайдеры пересекаются, возвращается 0.0.
-
-###### Пример
-
-```rust
-let collider_a = Collider { x: 10.0, y: 10.0, w: 5.0, h: 5.0 };
-let collider_b = Collider { x: 20.0, y: 15.0, w: 5.0, h: 5.0 };
-
-let distance = collider_a.distance_to(&collider_b);
-println!("Расстояние между объектами: {}", distance); // Вывод: Расстояние между объектами: 0.0
-```
-
-###### Примечания
-
-- Функция использует простую геометрию для определения расстояния между границами коллайдеров.
-- Если коллайдеры находятся в одной плоскости и не пересекаются, функция возвращает положительное значение.
-- Если коллайдеры пересекаются, функция возвращает 0.0, что может быть полезно для проверки коллизий.
-
-##### `Collider.ray_cast(&self, object: &Colider, direction: Direction) -> f32`
-
-Выполняет рэйкастинг по направлению движения для определения расстояния до другого коллайдера.
-
-Эта функция вычисляет расстояние от текущего коллайдера до границы другого коллайдера в указанном направлении (влево, вправо, вверх или вниз).
-
-###### Параметры
-
-- `object`: Ссылка на другой коллайдер (`Collider`), до которого необходимо вычислить расстояние.
-- `direction`: Направление (`Direction`), в котором будет производиться рэйкастинг.
-
-###### Возвращаемое значение
-
-Возвращает расстояние в виде `f32` до границы другого коллайдера в указанном направлении.
-
-###### Пример
-
-```rust
-let collider_a = Collider { x: 10.0, y: 10.0, w: 5.0, h: 5.0 };
-let collider_b = Collider { x: 20.0, y: 15.0, w: 5.0, h: 5.0 };
-
-let distance_left = collider_a.ray_cast(&collider_b, Direction::Left);
-let distance_right = collider_a.ray_cast(&collider_b, Direction::Right);
-let distance_top = collider_a.ray_cast(&collider_b, Direction::Top);
-let distance_bottom = collider_a.ray_cast(&collider_b, Direction::Bottom);
-
-println!("Distances: Left: {}, Right: {}, Top: {}, Bottom: {}", distance_left, distance_right, distance_top, distance_bottom);
-```
-
-###### Примечания
-
-- Функция возвращает абсолютное значение расстояния, что позволяет использовать её для проверки расстояний независимо от направления.
-
-##### `Collider.direction_move(&mut self, max: [f32; 2], direction: Direction)`
-
-Перемещает объект в указанном направлении с учетом глобальных коллизий.
-
-Эта функция изменяет координаты текущего объекта в зависимости от указанного направления (влево, вверх, вправо или вниз). Перед перемещением проверяется, не выходит ли объект за границы заданного максимального размера.
-
-###### Параметры
-
-- `max`: Массив из двух элементов типа `f32`, представляющий максимальные размеры области, в которой может находиться объект.
-- `max[0]`: Ширина области (например, ширина окна).
-- `max[1]`: Высота области (например, высота окна).
-- `direction`: Направление (`Direction`), в котором будет производиться перемещение.
-
-###### Возвращаемое значение
-
-Функция не возвращает значения, но изменяет координаты объекта в зависимости от направления перемещения.
-
-###### Пример
-
-```rust
-let mut collider = Collider { x: 10.0, y: 10.0, w: 5.0, h: 5.0, vlx: 1.0, vty: 1.0, vrx: 1.0, vby: 1.0 };
-let window_size = [800.0, 600.0];
-
-// Перемещение влево
-collider.direction_move(window_size, Direction::Left);
-println!("New position after moving left: ({}, {})", collider.x, collider.y);
-
-// Перемещение вниз
-collider.direction_move(window_size, Direction::Bottom);
-println!("New position after moving down: ({}, {})", collider.x, collider.y);
-```
-
-###### Примечания
-
-- Если объект пытается выйти за границы области, его координаты не изменяются.
-- Функция использует метод `global_collide` для проверки коллизий с границами области.
-
-#### Observer
-
-##### `Observer.resize(&mut self, size: [f32, 2])`
-
-Функция скейлинга объектов относительно изменений размера экрана и начальных настроек.
-
-Эта функция изменяет размеры и позиции объектов в зависимости от нового размера окна. Она пересчитывает ширину и высоту каждого объекта, а также их координаты, чтобы сохранить пропорции при изменении размера окна.
-
-###### Параметры
-
-- `size`: Массив из двух элементов типа `f32`, представляющий новый размер окна.
-	- `size[0]`: Новая ширина окна.
-	- `size[1]`: Новая высота окна.
-
-###### Возвращаемое значение
-
-Функция не возвращает значения, но изменяет размеры и позиции объектов в зависимости от нового размера окна.
-
-###### Пример
-
-```rust
-let mut game = Game {
-	window: [800.0, 600.0],
-	objects: vec![Collider { x: 100.0, y: 100.0, w: 50.0, h: 50.0 }]
-};
-
-// Изменение размера окна
-game.resize([1024.0, 768.0]);
-
-println!("New window size: {:?}", game.window);
-for obj in &game.objects {
-	println!("Object position and size: ({}, {}), ({}, {})", obj.x, obj.y, obj.w, obj.h);
+// Importing necessary modules from the RSDL library and other components
+use crate::sdl3::{SDL3, sdl3_consts::*, sdl3_structs::*, sdl3_sys::{sdl3_poll_event, sdl3_delay}, sdl3_window::sdl3_get_window_size};
+use crate::collider::{Collider, collider_consts::*};
+use crate::artist::{Artist, artist_consts::*};
+use std::{collections::HashMap, mem::zeroed};
+use crate::observer::Observer;
+use crate::screenwriter::Scene;
+
+/// Main function to test the SDL3 game system using RSDL.
+pub fn sdl3_osa_system_test() {
+    // Create an instance of the SDL3 library
+    let mut sdl3 = SDL3::new();
+
+    // Create a playable object (the character controlled by the player)
+    let playable = Collider::new(
+        COLLIDER_PLAYABLE,
+        ARTIST_RECTANGLE,
+        (255, 255, 255, 255), // White color
+        [100.0, 100.0],       // Initial position
+        [50.0, 50.0],         // Size of the playable object
+        5.0                    // Velocity
+    );
+
+    // Create a structure to hold the scenes of the game
+    let mut scenes: HashMap<u64, Scene> = HashMap::new();
+
+    // Create game scenes
+    let scene_0 = Scene::new(
+        vec![
+            Collider::new(COLLIDER_BLOCK, ARTIST_RECTANGLE, (127, 65, 250, 255), [0.0, 0.0], [300.0, 150.0], 0.0),
+            Collider::new(COLLIDER_BLOCK, ARTIST_RECTANGLE, (172, 45, 112, 255), [400.0, 552.0], [200.0, 650.0], 0.0),
+            Collider::new(COLLIDER_BLOCK, ARTIST_RECTANGLE, (117, 45, 112, 255), [1111.0, 243.0], [200.0, 950.0], 0.0),
+            Collider::new(COLLIDER_BLOCK, ARTIST_RECTANGLE, (17, 145, 112, 255), [284.0, 650.0], [1300.0, 200.0], 0.0)
+        ],
+        1, // Next scene ID
+        (0, 0, 0, 255), // Background color (black)
+        String::from("Press Q to change scene"), // Text to display
+        [1580.0, 40.0] // Position of the text
+    );
+
+    let scene_1 = Scene::new(
+        vec![], // No objects in this scene
+        0, // Next scene ID
+        (0, 0, 0, 255), // Background color (black)
+        String::from("Press Q to change scene"), // Text to display
+        [1580.0, 40.0] // Position of the text
+    );
+
+    // Add scenes to the scenes structure
+    scenes.insert(0, scene_0);
+    scenes.insert(1, scene_1);
+
+    // Initialize the observer with the playable object and scenes
+    let mut observer = Observer::new(
+        &mut sdl3,
+        playable,
+        scenes,
+        [1920.0, 1080.0], // Window size
+        SDL_INIT_VIDEO | SDL_INIT_AUDIO, // Initialization flags
+        SDL_WINDOW_FULLSCREEN | SDL_WINDOW_OPENGL // Window flags
+    );
+
+    // Initialize the default keyboard mappings
+    observer.default_keyboard();
+
+    // Create an artist for rendering objects
+    let artist = Artist::new(&mut sdl3, "src/sdl3/fonts/JetBrainsMono-VariableFont_wght.ttf", 20.0);
+
+    // Main game loop
+    let mut run = true;
+    while run {
+        unsafe {
+            let mut event: SDL_Event = zeroed();
+            // Poll for events
+            while sdl3_poll_event(&mut sdl3)(&mut event as *mut SDL_Event) {
+                let size = sdl3_get_window_size(&mut sdl3, observer.window);
+                match event.type_ {
+                    SDL_EVENT_QUIT => { run = false; break; }, // Exit the game
+                    SDL_EVENT_WINDOW_RESIZED => { observer.resize([size.0 as f32, size.1 as f32]); }, // Resize the observer
+                    SDL_EVENT_KEY_DOWN => { observer.events.insert(event.key.key); }, // Register key down event
+                    SDL_EVENT_KEY_UP => { observer.events.remove(&event.key.key); }, // Register key up event
+                    _ => {},
+                }
+            }
+
+            // Process events and update the observer state
+            observer.proceed_events(&mut sdl3);
+
+            // Render the scene using the artist
+            artist.drawing(&mut sdl3, observer.observer_to_artist_context());
+
+            // Clean up event fields and delay for a smoother frame rate
+            event.drop_fields();
+            sdl3_delay(&mut sdl3, 16); // Delay to limit frame rate
+        }
+    }
+
+    // Clean up resources before exiting
+    artist.destroy(&mut sdl3);
+    observer.destroy(&mut sdl3);
 }
 ```
-
-###### Примечания
-
-- Функция использует текущий размер окна (`self.window`) для вычисления коэффициентов масштабирования по осям X и Y (`sc_x` и `sc_y`).
-- Все объекты в `self.objects` будут масштабированы, чтобы соответствовать новому размеру окна.
-- После выполнения функции новое значение размера окна будет обновлено в `self.window`.
-
-##### `Observer.proceed_events(&mut self)`
-
-Обрабатывает события ввода и управляет движением игрового объекта.
-
-Эта функция проверяет, какие клавиши были нажаты, и в зависимости от этого перемещает играбельный объект (`playable`) в соответствующем направлении. Перед перемещением проверяется возможность движения с учетом коллизий с блокирующими объектами.
-
-###### Параметры
-
-Функция не принимает параметров.
-
-###### Возвращаемое значение
-
-Функция не возвращает значений, но изменяет состояние игрового объекта в зависимости от нажатых клавиш и коллизий с другими объектами.
-
-###### Пример
-
-```rust
-let mut game = Game {
-	objects: vec![Collider { x: 100.0, y: 100.0, w: 50.0, h: 50.0, type_: COLLIDER_BLOCK }],
-	playable: Player { x: 120.0, y: 120.0, vlx: 5.0, vty: 5.0, vrx: 5.0, vby: 5.0 },
-	events: vec![SDLK_A] // Пример нажатой клавиши
-};
-
-game.proceed_events();
-```
-
-###### Примечания
-
-- Функция использует метод `ray_cast` для определения расстояния до блокирующих объектов и метод `distance_to` для проверки пересечения с ними.
-- Движение осуществляется только в том случае, если объект не сталкивается с другими коллайдерами в выбранном направлении.
-
-#### Artist
-
-##### `Artist.draw(&self, sdl3: &mut SDL3, renderer: *mut c_void, playable: &Collider, objects: &Vec<Collider>)`
-
-Отрисовывает играбельный объект и окружающие объекты на экране.
-
-Эта функция отвечает за визуализацию играбельного объекта и всех объектов окружения в игровом мире. Она использует библиотеку SDL для установки цвета отрисовки и заполнения прямоугольников, представляющих объекты.
-
-###### Параметры
-
- - `playable`: Ссылка на играбельный объект, который будет отрисован.
- - `objects`: Вектор объектов, представляющих окружение, которые также будут отрисованы.
- - `sdl3`: Ссылка на контекст SDL3, используемый для рендеринга.
- - `renderer`: Указатель на рендерер SDL, используемый для отрисовки объектов.
-
-###### Функциональность
-
-- Сначала функция проверяет, какой тип объекта представляет играбельный персонаж, используя свойство `span`. Если это `ARTIST_RECTANGLE`, создается прямоугольник (`SDL_FRect`), который соответствует позиции и размерам играбельного объекта. Затем устанавливается цвет отрисовки на основе свойств цвета играбельного объекта и выполняется заполнение прямоугольника на экране.
-- После отрисовки играбельного объекта функция проходит по всем объектам в векторе `objects`. Для каждого объекта она проверяет его тип с помощью свойства `span`. Если это также `ARTIST_RECTANGLE`, создается прямоугольник для этого объекта, устанавливается цвет отрисовки на основе его свойств цвета, и выполняется заполнение прямоугольника на экране.
-
-###### Пример
-
-```rust
-let playable = Collider { x: 100.0, y: 150.0, w: 50.0, h: 50.0, color: (255, 0, 0, 255), span: ARTIST_RECTANGLE };
-let objects = vec![Collider { x: 200.0, y: 150.0, w: 50.0, h: 50.0, color: (0, 255, 0, 255), span: ARTIST_RECTANGLE }];
-draw(&sdl3, renderer, &playable, &objects);
-```
-
-###### Примечания
-
-- Убедитесь, что все объекты и их свойства (позиция, размер, цвет) правильно инициализированы перед вызовом этой функции.
-- Функция предполагает, что все объекты имеют тип `ARTIST_RECTANGLE`. Если есть другие типы, они должны быть обработаны соответствующим образом.
