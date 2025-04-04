@@ -50,4 +50,10 @@ impl Collider {
         )
         // ----------------------------------------------------------------------------------------
     }
+    pub fn resize(&mut self, sc_x: f32, sc_y: f32){
+        self.size[0] /= sc_x;
+        self.size[1] /= sc_y;
+        self.pos[0] /= sc_x;
+        self.pos[1] /= sc_y;
+    }
 }

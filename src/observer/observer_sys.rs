@@ -33,92 +33,12 @@ impl Observer{
         // code -----------------------------------------------------------------------------------
         let sc_x = self.size[0] / size[0];
         let sc_y = self.size[1] / size[1];
-        self.resize_playable(sc_x, sc_y);
-        self.resize_objects(sc_x, sc_y);
-        self.resize_text(sc_x, sc_y);
+        self.playable.resize(sc_x, sc_y);
+        for obj in &mut self.scenes.get_mut(&self.current_scene).unwrap().objects{
+            obj.resize(sc_x, sc_y);
+        }
+        self.scenes.get_mut(&self.current_scene).unwrap().resize(sc_x, sc_y);
         self.size = size;
         // -----------------------------------------------------------------------------------------
-    }
-    fn resize_playable(&mut self, sc_x: f32, sc_y: f32){
-        // Resizes the playable character based on the scaling factors.
-        //
-        // This function adjusts the width, height, and position of the playable character according
-        // to the provided scaling factors. It ensures that the character maintains its proportions
-        // relative to the new window size.
-        //
-        // # Parameters
-        //
-        // - `sc_x`: The scaling factor for the width.
-        // - `sc_y`: The scaling factor for the height.
-        //
-        // # Functionality
-        //
-        // - The function updates the width and height of the playable character by dividing them by
-        //   the respective scaling factors.
-        // - It also updates the x and y positions of the playable character to maintain its position
-        //   relative to the new window size.
-        //
-        // # Notes
-        //
-        // - This function should be called as part of the resizing process to ensure the playable
-        //   character is correctly resized.
-        // code -----------------------------------------------------------------------------------
-        self.playable.size[0] /= sc_x;
-        self.playable.size[1] /= sc_y;
-        self.playable.pos[0] /= sc_x;
-        self.playable.pos[1] /= sc_y;
-        // ----------------------------------------------------------------------------------------
-    }
-    fn resize_objects(&mut self, sc_x: f32, sc_y: f32){
-        // Resizes all objects in the game based on the scaling factors.
-        //
-        // This function adjusts the width, height, and position of all objects in the game according
-        // to the provided scaling factors. It ensures that all objects maintain their proportions
-        // relative to the new window size.
-        //
-        // # Parameters
-        //
-        // - `sc_x`: The scaling factor for the width.
-        // - `sc_y`: The scaling factor for the height.
-        //
-        // # Functionality
-        //
-        // - The function iterates over all objects and updates their width, height, and positions
-        //   by dividing them by the respective scaling factors.
-        //
-        // # Notes
-        //
-        // - This function should be called as part of the resizing process to ensure all objects
-        //   are correctly resized.
-        // code -----------------------------------------------------------------------------------
-        for obj in &mut self.scenes.get_mut(&self.current_scene).unwrap().objects{
-            obj.size[0] /= sc_x;
-            obj.size[1] /= sc_y;
-            obj.pos[0] /= sc_x;
-            obj.pos[1] /= sc_y;
-        }
-        // ----------------------------------------------------------------------------------------
-    }
-    fn resize_text(&mut self, sc_x: f32, sc_y: f32){
-        // Resizes the text points of the current scene by scaling factors.
-        //
-        // This function modifies the `point` coordinates of the current scene
-        // by dividing the x and y coordinates by the provided scaling factors `sc_x`
-        // and `sc_y`, respectively. It retrieves a mutable reference to the current
-        // scene from the `scenes` collection using `get_mut()`, ensuring that we can
-        // modify the scene's data directly. The function assumes that the current scene
-        // exists in the collection; if it does not, it will panic due to the use of `unwrap()`.
-        //
-        // # Parameters
-        // - `sc_x`: The scaling factor for the x-coordinate.
-        // - `sc_y`: The scaling factor for the y-coordinate.
-        //
-        // # Panics
-        // This function will panic if the current scene is not found in the `scenes`
-        // collection, as it uses `unwrap()` to access the mutable reference.
-        // code -----------------------------------------------------------------------------------
-        self.scenes.get_mut(&self.current_scene).unwrap().point[0] /= sc_x;
-        self.scenes.get_mut(&self.current_scene).unwrap().point[1] /= sc_y;
-        // ----------------------------------------------------------------------------------------
     }
 }

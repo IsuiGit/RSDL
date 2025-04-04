@@ -1,6 +1,7 @@
 use crate::collider::Collider;
 
 mod screenwriter_text;
+mod screenwriter_sys;
 
 #[derive(Debug, Clone)]
 pub struct Scene{
