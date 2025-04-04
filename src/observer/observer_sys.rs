@@ -35,6 +35,7 @@ impl Observer{
         let sc_y = self.size[1] / size[1];
         self.resize_playable(sc_x, sc_y);
         self.resize_objects(sc_x, sc_y);
+        self.resize_text(sc_x, sc_y);
         self.size = size;
         // -----------------------------------------------------------------------------------------
     }
@@ -96,6 +97,28 @@ impl Observer{
             obj.pos[0] /= sc_x;
             obj.pos[1] /= sc_y;
         }
+        // ----------------------------------------------------------------------------------------
+    }
+    fn resize_text(&mut self, sc_x: f32, sc_y: f32){
+        // Resizes the text points of the current scene by scaling factors.
+        //
+        // This function modifies the `point` coordinates of the current scene
+        // by dividing the x and y coordinates by the provided scaling factors `sc_x`
+        // and `sc_y`, respectively. It retrieves a mutable reference to the current
+        // scene from the `scenes` collection using `get_mut()`, ensuring that we can
+        // modify the scene's data directly. The function assumes that the current scene
+        // exists in the collection; if it does not, it will panic due to the use of `unwrap()`.
+        //
+        // # Parameters
+        // - `sc_x`: The scaling factor for the x-coordinate.
+        // - `sc_y`: The scaling factor for the y-coordinate.
+        //
+        // # Panics
+        // This function will panic if the current scene is not found in the `scenes`
+        // collection, as it uses `unwrap()` to access the mutable reference.
+        // code -----------------------------------------------------------------------------------
+        self.scenes.get_mut(&self.current_scene).unwrap().point[0] /= sc_x;
+        self.scenes.get_mut(&self.current_scene).unwrap().point[1] /= sc_y;
         // ----------------------------------------------------------------------------------------
     }
 }

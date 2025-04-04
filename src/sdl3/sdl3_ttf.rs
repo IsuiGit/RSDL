@@ -17,7 +17,7 @@ pub fn ttf_open_font(sdl3: &mut SDL3, file: &str, ptsize: f32) -> *mut c_void {
     unsafe{
         let ptr_file = match file.len() == 0 {
             true => {
-                CString::new("src/sdl3/fonts/OpenSans-VariableFont_wdth,wght.ttf").unwrap()
+                CString::new("src/sdl3/static/fonts/JetBrainsMono-VariableFont_wght.ttf").unwrap()
             },
             false => {
                 CString::new(file).unwrap()

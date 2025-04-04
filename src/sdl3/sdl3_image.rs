@@ -11,7 +11,7 @@ pub fn img_load_texture(sdl3: &mut SDL3, renderer: *mut c_void, file: &str) -> *
     unsafe{
         let ptr_file = match file.len() == 0 {
             true => {
-                CString::new("src/sdl3/static/placeholder.png").unwrap()
+                CString::new("src/sdl3/static/img/placeholder.png").unwrap()
             },
             false => {
                 CString::new(file).unwrap()
@@ -28,7 +28,7 @@ pub fn img_load(sdl3: &mut SDL3, file: &str) -> *mut c_void{
     unsafe{
         let ptr_file = match file.len() == 0 {
             true => {
-                CString::new("src/sdl3/static/placeholder.png").unwrap()
+                CString::new("src/sdl3/static/img/placeholder.png").unwrap()
             },
             false => {
                 CString::new(file).unwrap()

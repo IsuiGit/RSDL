@@ -1,6 +1,6 @@
 use crate::artist::{Artist, ArtistCache, artist_consts::*};
 use crate::observer::ObserverContext;
-use crate::sdl3::{SDL3, sdl3_render::*, sdl3_structs::*, sdl3_ttf::*, sdl3_image::*};
+use crate::sdl3::{SDL3, sdl3_render::*, sdl3_structs::*, sdl3_ttf::*};
 use crate::collider::Collider;
 use std::ffi::c_void;
 
