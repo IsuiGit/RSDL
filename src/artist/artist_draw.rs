@@ -167,8 +167,7 @@ impl Artist{
         // The font used for rendering text should be loaded and set in the `self.font` field. If the
         // text rendering fails, appropriate error handling should be implemented to manage the failure.
         // code -----------------------------------------------------------------------------------
-        let engine = ttf_create_render_text_engine(sdl3, renderer);
-        let text = ttf_create_text(sdl3, engine, self.font, text.as_str());
+        let text = ttf_create_text(sdl3, self.engine, self.font, text.as_str());
         ttf_draw_render_text(sdl3, text, ptext[0], ptext[1]);
         // ----------------------------------------------------------------------------------------
     }

@@ -94,6 +94,7 @@ impl Observer {
             }
         }
 
+        // Move left event
         if let Some(&event) = self.keyboard.get(&OBSERVER_MOVE_LEFT_EVENT){
             if self.events.contains(&event){
                 let mut can_move = true;
@@ -109,6 +110,7 @@ impl Observer {
             }
         }
 
+        // Move top event
         if let Some(&event) = self.keyboard.get(&OBSERVER_MOVE_TOP_EVENT){
             if self.events.contains(&event){
                 let mut can_move = true;
@@ -124,6 +126,7 @@ impl Observer {
             }
         }
 
+        // Move right event
         if let Some(&event) = self.keyboard.get(&OBSERVER_MOVE_RIGHT_EVENT){
             if self.events.contains(&event){
                 let mut can_move = true;
@@ -139,6 +142,7 @@ impl Observer {
             }
         }
 
+        // Move bottom event
         if let Some(&event) = self.keyboard.get(&OBSERVER_MOVE_BOTTOM_EVENT){
             if self.events.contains(&event){
                 let mut can_move = true;

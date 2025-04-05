@@ -40,25 +40,21 @@ impl Collider{
         match direction {
             Direction::Left => {
                 if !self.global_collide(max).0 {
-                    self.state = State::Moving;
                     self.pos[0] -= self.velocity;
                 }
             }
             Direction::Top => {
                 if !self.global_collide(max).1 {
-                    self.state = State::Moving;
                     self.pos[1] -= self.velocity;
                 }
             }
             Direction::Right => {
                 if !self.global_collide(max).2 {
-                    self.state = State::Moving;
                     self.pos[0] += self.velocity;
                 }
             }
             Direction::Bottom => {
                 if !self.global_collide(max).3 {
-                    self.state = State::Moving;
                     self.pos[1] += self.velocity;
                 }
             }

@@ -5,11 +5,12 @@ pub mod artist_consts;
 use crate::screenwriter::Scene;
 use crate::collider::Collider;
 use crate::sdl3::{SDL3, sdl3_render::*, sdl3_image::*};
-use crate::sdl3::sdl3_ttf::{ttf_open_font, ttf_close_font};
+use crate::sdl3::sdl3_ttf::{ttf_open_font, ttf_close_font, ttf_create_render_text_engine,};
 use std::{ffi::c_void, collections::HashMap};
 
 pub struct Artist{
-    pub font: *mut c_void
+    pub font: *mut c_void,
+    pub engine: *mut c_void
 }
 
 #[derive(Clone, Debug)]
@@ -18,7 +19,7 @@ pub struct ArtistCache{
 }
 
 impl Artist{
-    pub fn new(sdl3: &mut SDL3, file: &str, ptsize: f32) -> Self{
+    pub fn new(sdl3: &mut SDL3, renderer: *mut c_void, file: &str, ptsize: f32) -> Self{
         // Creates a new instance of the `Artist` struct by loading a font.
         //
         // This function initializes a new `Artist` object by opening a font file using the SDL3
@@ -43,7 +44,8 @@ impl Artist{
         // error handling should be implemented to manage the failure.
         // code -----------------------------------------------------------------------------------
         let font = ttf_open_font(sdl3, file, ptsize);
-        Self{font: font}
+        let engine = ttf_create_render_text_engine(sdl3, renderer);
+        Self{font: font, engine: engine}
         // ----------------------------------------------------------------------------------------
     }
     pub fn destroy(&self, sdl3: &mut SDL3){
