@@ -46,6 +46,7 @@ pub const SDL_WINDOW_NOT_FOCUSABLE: u64 = 0x0000000080000000;
 
 // SDL_KEY CONSTANTS START-------------------------------------------------------------------------
 pub const SDLK_ESCAPE: u32 = 0x0000001b;
+pub const SDLK_SPACE: u32 = 0x00000020;
 pub const SDLK_A: u32 = 0x00000061;
 pub const SDLK_B: u32 = 0x00000062;
 pub const SDLK_C: u32 = 0x00000063;
@@ -72,6 +73,8 @@ pub const SDLK_W: u32 = 0x00000077;
 pub const SDLK_X: u32 = 0x00000078;
 pub const SDLK_Y: u32 = 0x00000079;
 pub const SDLK_Z: u32 = 0x0000007a;
+pub const SDLK_F1: u32 = 0x4000003a;
+pub const SDLK_F2: u32 = 0x4000003b;
 // ------------------------------------------------------------------------------------------------
 
 // SDL_KEYMOD CONSTANTS START----------------------------------------------------------------------

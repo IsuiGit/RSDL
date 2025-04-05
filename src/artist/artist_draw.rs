@@ -45,6 +45,9 @@ impl Artist{
         if context.text.len() != 0 {
             self.draw_text(sdl3, context.renderer, context.text, context.point);
         }
+        if context.debug{
+            self.draw_debug_info(sdl3, &context.playable, context.renderer);
+        }
         sdl3_render_present(sdl3, context.renderer);
         // ----------------------------------------------------------------------------------------
     }

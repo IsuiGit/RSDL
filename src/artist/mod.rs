@@ -1,4 +1,5 @@
 mod artist_draw;
+pub mod artist_sys;
 pub mod artist_consts;
 
 use crate::screenwriter::Scene;
@@ -11,7 +12,7 @@ pub struct Artist{
     pub font: *mut c_void
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct ArtistCache{
     pub cache: HashMap<String, *mut c_void>
 }
@@ -42,7 +43,7 @@ impl Artist{
         // error handling should be implemented to manage the failure.
         // code -----------------------------------------------------------------------------------
         let font = ttf_open_font(sdl3, file, ptsize);
-        Artist{font: font}
+        Self{font: font}
         // ----------------------------------------------------------------------------------------
     }
     pub fn destroy(&self, sdl3: &mut SDL3){

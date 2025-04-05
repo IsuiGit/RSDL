@@ -1,4 +1,5 @@
 use crate::collider::Collider;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 impl Collider {
     pub fn global_collide(&self, max: [f32; 2]) -> (bool, bool, bool, bool) {
@@ -51,9 +52,52 @@ impl Collider {
         // ----------------------------------------------------------------------------------------
     }
     pub fn resize(&mut self, sc_x: f32, sc_y: f32){
+        // Resizes the object by scaling its size and position.
+        //
+        // This method modifies the size and position of the object by dividing
+        // the current size and position coordinates by the specified scaling factors.
+        // It is typically used to adjust the dimensions and location of the object
+        // in response to changes in the rendering context or viewport size.
+        //
+        // # Parameters
+        //
+        // - `sc_x`: The scaling factor for the x-axis. A value greater than 1.0
+        //   will reduce the size and position, while a value less than 1.0 will
+        //   increase them.
+        // - `sc_y`: The scaling factor for the y-axis. Similar to `sc_x`, a value
+        //   greater than 1.0 will reduce the size and position, while a value
+        //   less than 1.0 will increase them.
+        // Ensure that the scaling factors are not zero to avoid division by zero,
+        // which would result in undefined behavior or runtime errors.
+        // code -----------------------------------------------------------------------------------
         self.size[0] /= sc_x;
         self.size[1] /= sc_y;
         self.pos[0] /= sc_x;
         self.pos[1] /= sc_y;
+        // ----------------------------------------------------------------------------------------
+    }
+    pub fn update(&mut self){
+        // Updates the timestamp of the object to the current time in seconds since the UNIX epoch.
+        //
+        // This method retrieves the current system time and calculates the duration
+        // since the UNIX epoch (January 1, 1970). It then updates the `timestamp`
+        // field of the object with the current time in seconds.
+        //
+        // # Note
+        //
+        // The method uses `unwrap()` to handle the result of `duration_since`, which
+        // will panic if the current time is before the UNIX epoch. Ensure that the
+        // system time is valid to avoid runtime panics.
+        // code -----------------------------------------------------------------------------------
+        self.timestamp = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
+        // ----------------------------------------------------------------------------------------
+    }
+    pub fn debug(&self) -> String {
+        let debug_info = format!(
+            "Type: {}\nTimestamp: {}\nSpan: {}\nColor: ({},{},{},{})\nImage: {}\nPos: ({},{})\nSize: ({},{})\nVelocity: {}\nState: {:?}",
+            &self.type_, &self.timestamp, &self.span, &self.color.0, &self.color.1, &self.color.2, &self.color.3,
+            &self.image, &self.pos[0], &self.pos[1], &self.size[0], &self.size[1], &self.velocity, &self.state
+        );
+        debug_info
     }
 }

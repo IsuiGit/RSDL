@@ -1,5 +1,5 @@
 use crate::observer::{Observer, observer_consts::*};
-use crate::collider::{Collider, Direction, collider_consts::*};
+use crate::collider::{Collider, Direction, State, collider_consts::*};
 use crate::artist::ArtistCache;
 use crate::sdl3::{SDL3, sdl3_consts::*, sdl3_structs::SDL_Event, sdl3_sys::sdl3_push_event};
 use std::{mem::zeroed, thread, time::Duration};
@@ -40,84 +40,117 @@ impl Observer {
         // collision detection and movement. If any of the scene or object data is invalid, the function
         // may panic due to the use of `unwrap()`.
         // code -----------------------------------------------------------------------------------
-        let objects: Vec<&Collider> = self.scenes.get(&self.current_scene).unwrap()
-            .objects.iter().filter(|obj| obj.type_ == COLLIDER_BLOCK).collect();
-
         if self.keyboard.is_empty(){
             println!("Keyboard not initialized!");
             return;
         }
 
+        // Update all objects
+        self.update();
+
+        // Get updatet non-playable objects
+        let objects: Vec<&Collider> = self.scenes.get(&self.current_scene).unwrap()
+            .objects.iter().filter(|obj| obj.type_ == COLLIDER_BLOCK).collect();
+
+        // Counting playable overlaps
         for obj in &self.scenes.get(&self.current_scene).unwrap().objects{
             self.playable.overlap(self.size, &obj);
         }
 
-        if self.events.contains(&self.keyboard.get(&OBSERVER_CHANGE_SCENE_EVENT).unwrap_or(&0)) {
-            let next = self.scenes.get(&self.current_scene).unwrap().next_scene;
-            if self.scenes.contains_key(&next){
-                self.current_scene = next;
-                self.cache = ArtistCache::new(sdl3, self.renderer, &self.playable, self.scenes.get(&next).unwrap().clone());
-                thread::sleep(Duration::from_secs(1));
+        // Enable playable debug text
+        if let Some(&event) = self.keyboard.get(&OBSERVER_DEBUG_ENABLE_EVENT){
+            if self.events.contains(&event){
+                self.debug = true;
             }
         }
 
-        if self.events.contains(&self.keyboard.get(&OBSERVER_EXIT_EVENT).unwrap_or(&0)){
-            unsafe {
-                let mut event: SDL_Event = zeroed();
-                event.type_ = SDL_EVENT_QUIT;
-                sdl3_push_event(sdl3, &mut event as *mut SDL_Event);
+        // Disable playable debug text
+        if let Some(&event) = self.keyboard.get(&OBSERVER_DEBUG_DISABLE_EVENT){
+            if self.events.contains(&event){
+                self.debug = false;
             }
         }
 
-        if self.events.contains(&self.keyboard.get(&OBSERVER_MOVE_LEFT_EVENT).unwrap_or(&0)){
-            let mut can_move = true;
-            let direction = Direction::Left;
-            for obj in &objects{
-                if self.playable.ray_cast(obj, direction.clone()) < self.playable.velocity && self.playable.distance_to(obj) == 0.0 {
-                    can_move = false;
+        // Change scene event
+        if let Some(&event) = self.keyboard.get(&OBSERVER_CHANGE_SCENE_EVENT){
+            if self.events.contains(&event){
+                let next = self.scenes.get(&self.current_scene).unwrap().next_scene;
+                if self.scenes.contains_key(&next){
+                    self.current_scene = next;
+                    self.cache = ArtistCache::new(sdl3, self.renderer, &self.playable, self.scenes.get(&next).unwrap().clone());
+                    thread::sleep(Duration::from_secs(1));
                 }
             }
-            if can_move{
-                self.playable.direction_move(self.size, direction.clone());
+        }
+
+        // Exit event
+        if let Some(&event) = self.keyboard.get(&OBSERVER_EXIT_EVENT){
+            if self.events.contains(&event){
+                unsafe {
+                    let mut event: SDL_Event = zeroed();
+                    event.type_ = SDL_EVENT_QUIT;
+                    sdl3_push_event(sdl3, &mut event as *mut SDL_Event);
+                }
             }
         }
 
-        if self.events.contains(&self.keyboard.get(&OBSERVER_MOVE_TOP_EVENT).unwrap_or(&0)){
-            let mut can_move = true;
-            let direction = Direction::Top;
-            for obj in &objects{
-                if self.playable.ray_cast(obj, direction.clone()) < self.playable.velocity && self.playable.distance_to(obj) == 0.0 {
-                    can_move = false;
+        if let Some(&event) = self.keyboard.get(&OBSERVER_MOVE_LEFT_EVENT){
+            if self.events.contains(&event){
+                let mut can_move = true;
+                let direction = Direction::Left;
+                for obj in &objects{
+                    if self.playable.ray_cast(obj, direction.clone()) < self.playable.velocity && self.playable.distance_to(obj) == 0.0 {
+                        can_move = false;
+                    }
                 }
-            }
-            if can_move{
-                self.playable.direction_move(self.size, direction.clone());
+                if can_move{
+                    self.playable.direction_move(self.size, direction.clone());
+                }
             }
         }
 
-        if self.events.contains(&self.keyboard.get(&OBSERVER_MOVE_RIGHT_EVENT).unwrap_or(&0)){
-            let mut can_move = true;
-            let direction = Direction::Right;
-            for obj in &objects{
-                if self.playable.ray_cast(obj, direction.clone()) < self.playable.velocity && self.playable.distance_to(obj) == 0.0 {
-                    can_move = false;
+        if let Some(&event) = self.keyboard.get(&OBSERVER_MOVE_TOP_EVENT){
+            if self.events.contains(&event){
+                let mut can_move = true;
+                let direction = Direction::Top;
+                for obj in &objects{
+                    if self.playable.ray_cast(obj, direction.clone()) < self.playable.velocity && self.playable.distance_to(obj) == 0.0 {
+                        can_move = false;
+                    }
                 }
-            }
-            if can_move{
-                self.playable.direction_move(self.size, direction.clone());
+                if can_move{
+                    self.playable.direction_move(self.size, direction.clone());
+                }
             }
         }
 
-        if self.events.contains(&self.keyboard.get(&OBSERVER_MOVE_BOTTOM_EVENT).unwrap_or(&0)){
-            let mut can_move = true;
-            let direction = Direction::Bottom;
-            for obj in &objects{
-                if self.playable.ray_cast(obj, direction.clone()) < self.playable.velocity && self.playable.distance_to(obj) == 0.0 {
-                    can_move = false;
+        if let Some(&event) = self.keyboard.get(&OBSERVER_MOVE_RIGHT_EVENT){
+            if self.events.contains(&event){
+                let mut can_move = true;
+                let direction = Direction::Right;
+                for obj in &objects{
+                    if self.playable.ray_cast(obj, direction.clone()) < self.playable.velocity && self.playable.distance_to(obj) == 0.0 {
+                        can_move = false;
+                    }
+                }
+                if can_move{
+                    self.playable.direction_move(self.size, direction.clone());
                 }
             }
-            if can_move{
-                self.playable.direction_move(self.size, direction.clone());
+        }
+
+        if let Some(&event) = self.keyboard.get(&OBSERVER_MOVE_BOTTOM_EVENT){
+            if self.events.contains(&event){
+                let mut can_move = true;
+                let direction = Direction::Bottom;
+                for obj in &objects{
+                    if self.playable.ray_cast(obj, direction.clone()) < self.playable.velocity && self.playable.distance_to(obj) == 0.0 {
+                        can_move = false;
+                    }
+                }
+                if can_move{
+                    self.playable.direction_move(self.size, direction.clone());
+                }
             }
         }
         // ----------------------------------------------------------------------------------------

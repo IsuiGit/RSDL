@@ -2,19 +2,21 @@
 use crate::sdl3::{
     SDL3,
     SDL_Init,
-    SDLF_Init,
+    TTF_Init,
     SDL_Delay,
     SDL_GetError,
     SDL_PollEvent,
     SDL_PushEvent,
     SDL_Quit,
-    SDLF_Quit,
-    sdl3_structs::SDL_Event,
+    TTF_Quit,
+    SDL_GL_GetCurrentWindow,
+    SDL3_GetRenderer,
+    sdl3_structs::SDL_Event
 };
 // ------------------------------------------------------------------------------------------------
 // STANDART MODS-----------------------------------------------------------------------------------
 use libloading::Symbol;
-use std::ffi::CStr;
+use std::ffi::{CStr, c_void};
 // ------------------------------------------------------------------------------------------------
 pub fn sdl3_init(sdl3: &mut SDL3, flags: u32) {
     unsafe {
@@ -28,7 +30,7 @@ pub fn sdl3_init(sdl3: &mut SDL3, flags: u32) {
 
 pub fn sdl3_ttf_init(sdl3: &mut SDL3){
     unsafe {
-        let _sdl3_ttf_init: Symbol<SDLF_Init> = sdl3.ttf_lib.get(b"TTF_Init")
+        let _sdl3_ttf_init: Symbol<TTF_Init> = sdl3.ttf_lib.get(b"TTF_Init")
             .expect("Failed to get symbol TTF_Init");
         if !_sdl3_ttf_init(){
             panic!("SDL_ttf could not initialize! SDL_Error: {}", sdl3_get_error(sdl3));
@@ -79,8 +81,26 @@ pub fn sdl3_quit(sdl3: &mut SDL3){
 
 pub fn sdl3_ttf_quit(sdl3: &mut SDL3){
     unsafe {
-        let _sdl3_ttf_quit: Symbol<SDLF_Quit> = sdl3.ttf_lib.get(b"TTF_Quit")
+        let _sdl3_ttf_quit: Symbol<TTF_Quit> = sdl3.ttf_lib.get(b"TTF_Quit")
             .expect("Failed to get symbol TTF_Quit");
         _sdl3_ttf_quit();
+    }
+}
+
+pub fn sdl3_gl_get_current_window(sdl3: &mut SDL3) -> *mut c_void{
+    unsafe{
+        let _sdl3_gl_get_current_window: Symbol<SDL_GL_GetCurrentWindow> = sdl3.lib.get(b"SDL_GL_GetCurrentWindow")
+            .expect("Failed to get symbol SDL_GL_GetCurrentWindow");
+        let window = _sdl3_gl_get_current_window();
+        if !window.is_null(){ window } else { panic!("SDL_GL_GetCurrentWindow could not found a window! SDL_Error: {}", sdl3_get_error(sdl3)); }
+    }
+}
+
+pub fn sdl3_get_renderer(sdl3: &mut SDL3, window: *mut c_void) -> *mut c_void{
+    unsafe{
+        let _sdl3_get_renderer: Symbol<SDL3_GetRenderer> = sdl3.lib.get(b"SDL3_GetRenderer")
+            .expect("Failed to get symbol SDL3_GetRenderer");
+        let renderer = _sdl3_get_renderer(window);
+        if !renderer.is_null(){ renderer } else { panic!("SDL_GetRenderer could not found a window! SDL_Error: {}", sdl3_get_error(sdl3)); }
     }
 }

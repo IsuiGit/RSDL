@@ -1,6 +1,6 @@
 use crate::sdl3::{SDL3, sdl3_consts::*, sdl3_structs::*, sdl3_sys::{sdl3_poll_event, sdl3_delay}, sdl3_window::sdl3_get_window_size};
 use crate::collider::{Collider, collider_consts::*};
-use crate::artist::{Artist, artist_consts::*};
+use crate::artist::{Artist, artist_consts::*, artist_sys::*};
 use std::{collections::HashMap, mem::zeroed};
 use crate::observer::Observer;
 use crate::screenwriter::Scene;
@@ -19,7 +19,6 @@ pub fn sdl3_main_test(){
     // Создаем сцены игры -------------------------------------------------------------------------
     let scene_0 = Scene::new(
         vec![
-            Collider::new(COLLIDER_BLOCK, ARTIST_IMAGE, (127, 65, 250, 255), "", [0.0, 0.0], [300.0, 150.0], 0.0),
             Collider::new(COLLIDER_BLOCK, ARTIST_IMAGE, (172, 45, 112, 255), "", [400.0, 552.0], [200.0, 650.0], 0.0),
             Collider::new(COLLIDER_BLOCK, ARTIST_IMAGE, (117, 45, 112, 255), "", [1111.0, 243.0], [200.0, 950.0], 0.0),
             Collider::new(COLLIDER_BLOCK, ARTIST_IMAGE, (17, 145, 112, 255), "", [284.0, 650.0], [1300.0, 200.0], 0.0)

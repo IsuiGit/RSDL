@@ -25,6 +25,7 @@ mod observer_events;
 mod observer_keyboard;
 pub mod observer_consts;
 
+#[derive(Debug)]
 pub struct Observer{
     pub playable: Collider,
     pub scenes: HashMap<u64, Scene>,
@@ -35,6 +36,7 @@ pub struct Observer{
     pub window: *mut c_void,
     pub renderer: *mut c_void,
     pub cache: ArtistCache,
+    pub debug: bool
 }
 
 pub struct ObserverContext{
@@ -44,7 +46,8 @@ pub struct ObserverContext{
     pub background: (u8, u8, u8, u8),
     pub text: String,
     pub point: [f32; 2],
-    pub cache: ArtistCache
+    pub cache: ArtistCache,
+    pub debug: bool
 }
 
 impl Observer {
@@ -97,7 +100,7 @@ impl Observer {
         let renderer = sdl3_create_renderer(sdl3, window, "");
         if renderer.is_null(){sdl3_destroy_window(sdl3, window); sdl3_quit(sdl3); panic!("renderer pointer is null!");}
         let cache = ArtistCache::new(sdl3, renderer, &playable, scenes.get(&0).unwrap().clone());
-        Observer {
+        Self {
             playable: playable,
             scenes: scenes,
             current_scene: 0,
@@ -106,7 +109,8 @@ impl Observer {
             keyboard: keyboard,
             window: window,
             renderer: renderer,
-            cache: cache
+            cache: cache,
+            debug: false
         }
         // ----------------------------------------------------------------------------------------
     }
@@ -172,7 +176,8 @@ impl Observer {
             background: self.scenes.get(&self.current_scene).unwrap().background,
             text: self.scenes.get(&self.current_scene).unwrap().text.clone(),
             point: self.scenes.get(&self.current_scene).unwrap().point,
-            cache: self.cache.clone()
+            cache: self.cache.clone(),
+            debug: self.debug
         }
         // ----------------------------------------------------------------------------------------
     }

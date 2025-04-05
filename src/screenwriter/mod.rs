@@ -38,7 +38,7 @@ impl Scene{
         // Ensure that the provided `objects` and `text` are valid for the intended use in the scene.
         // The `background` color should be specified in the range of 0 to 255 for each channel.
         // code -----------------------------------------------------------------------------------
-        Scene{objects: objects, next_scene: next_scene, background: background, text: text, point: point}
+        Self{objects: objects, next_scene: next_scene, background: background, text: text, point: point}
         // ----------------------------------------------------------------------------------------
     }
 }

@@ -41,4 +41,30 @@ impl Observer{
         self.size = size;
         // -----------------------------------------------------------------------------------------
     }
+    pub fn update(&mut self){
+        // Updates the state of the game objects and the current scene.
+        //
+        // This method is responsible for updating the playable character or object,
+        // as well as all objects within the currently active scene. It is typically
+        // called once per frame in the game loop to ensure that all game entities
+        // are updated according to their logic.
+        //
+        // The method performs the following actions:
+        // 1. Calls the `update` method on the `playable` object to update its state,
+        //    which may include position, animations, and other gameplay-related logic.
+        // 2. Retrieves the current scene using the `current_scene` identifier and
+        //    updates each object within that scene by calling their respective
+        //    `update` methods. This allows for the processing of game logic such as
+        //    movement, interactions, and collision detection.
+        //
+        // Note: This method assumes that the current scene exists. If the scene is
+        // not found, it will panic. Consider implementing error handling to manage
+        // cases where the current scene may not be valid.
+        // code -----------------------------------------------------------------------------------
+        self.playable.update();
+        for obj in &mut self.scenes.get_mut(&self.current_scene).unwrap().objects{
+            obj.update();
+        }
+        // ----------------------------------------------------------------------------------------
+    }
 }

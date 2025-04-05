@@ -3,8 +3,8 @@ use std::{ffi::{c_void, c_char}};
 // SDL3 types register
 
 // SDL3_TTF Types ---------------------------------------------------------------------------------
-pub type SDLF_Init = unsafe extern "C" fn() -> bool;
-pub type SDLF_Quit = unsafe extern "C" fn();
+pub type TTF_Init = unsafe extern "C" fn() -> bool;
+pub type TTF_Quit = unsafe extern "C" fn();
 // ------------------------------------------------------------------------------------------------
 
 // SDL3 Event types -------------------------------------------------------------------------------
@@ -22,6 +22,10 @@ pub type SDL_GetError = unsafe extern "C" fn() -> *const c_char;
 pub type SDL_Delay = unsafe extern "C" fn(u32);
 // SDL3_PollEvent
 pub type SDL_PollEvent = unsafe extern "C" fn(*mut SDL_Event) -> bool;
+// SDL3_GL_GetCurrentWindow
+pub type SDL_GL_GetCurrentWindow = unsafe extern "C" fn() -> *mut c_void;
+// SDL3_GetRenderer
+pub type SDL3_GetRenderer = unsafe extern "C" fn(*mut c_void) -> *mut c_void;
 // ------------------------------------------------------------------------------------------------
 
 // SDL3 Create types ------------------------------------------------------------------------------

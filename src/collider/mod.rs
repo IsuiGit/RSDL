@@ -4,23 +4,34 @@ pub mod collider_ray;
 pub mod collider_collision;
 pub mod collider_consts;
 
+use std::time::{SystemTime, UNIX_EPOCH};
+
 #[derive(Debug, Clone)]
 pub enum Direction {
     Left,
     Top,
     Right,
-    Bottom,
+    Bottom
+}
+
+#[derive(Debug, Clone, PartialEq, Default)]
+pub enum State {
+    #[default] Stable,
+    Moving,
+    Jump
 }
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub struct Collider{
     pub type_: u32,
+    pub timestamp: u64,
     pub span: u32,
     pub color: (u8, u8, u8, u8),
     pub image: String,
     pub pos: [f32; 2],
     pub size: [f32; 2],
-    pub velocity: f32
+    pub velocity: f32,
+    pub state: State
 }
 
 impl Collider{
@@ -50,7 +61,17 @@ impl Collider{
         // The `pos` and `size` should be set according to the intended placement and dimensions of
         // the collider in the game world.
         // code -----------------------------------------------------------------------------------
-        Collider{type_: type_, span: span, color: color, image: image.to_string(), pos: pos, size: size, velocity: velocity}
+        Self{
+            type_: type_,
+            timestamp: SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs(),
+            span: span,
+            color: color,
+            image: image.to_string(),
+            pos: pos,
+            size: size,
+            velocity: velocity,
+            state: State::Stable
+        }
         // ----------------------------------------------------------------------------------------
     }
 }
