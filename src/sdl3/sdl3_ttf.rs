@@ -7,6 +7,7 @@ use crate::sdl3::{
     TTF_CreateRendererTextEngine,
     TTF_CreateText,
     TTF_DrawRendererText,
+    TTF_DestroyText,
     sdl3_sys::sdl3_get_error,
     sdl3_structs::SDL_Color
 };
@@ -88,5 +89,13 @@ pub fn ttf_draw_render_text(sdl3: &mut SDL3, text: *mut c_void, x: f32, y: f32) 
         let _ttf_draw_render_text: Symbol<TTF_DrawRendererText> = sdl3.ttf_lib.get(b"TTF_DrawRendererText")
             .expect("Failed to get symbol TTF_DrawRendererText");
         _ttf_draw_render_text(text, x, y)
+    }
+}
+
+pub fn ttf_destroy_text(sdl3: &mut SDL3, text: *mut c_void){
+    unsafe{
+        let _ttf_destroy_text: Symbol<TTF_DestroyText> = sdl3.ttf_lib.get(b"TTF_DestroyText")
+            .expect("Failed to get symbol TTF_DestroyText");
+        _ttf_destroy_text(text);
     }
 }

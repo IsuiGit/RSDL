@@ -169,6 +169,7 @@ impl Artist{
         // code -----------------------------------------------------------------------------------
         let text = ttf_create_text(sdl3, self.engine, self.font, text.as_str());
         ttf_draw_render_text(sdl3, text, ptext[0], ptext[1]);
+        ttf_destroy_text(sdl3, text);
         // ----------------------------------------------------------------------------------------
     }
 }
