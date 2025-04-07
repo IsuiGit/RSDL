@@ -110,3 +110,9 @@ pub const SDL_TEXTUREACCESS_STATIC: u32 = 0;
 pub const SDL_TEXTUREACCESS_STREAMING: u32 = 1;
 pub const SDL_TEXTUREACCESS_TARGET: u32 = 2;
 // ------------------------------------------------------------------------------------------------
+
+// SDL3 TIME CONSTS--------------------------------------------------------------------------------
+pub const SDL_MIN_DELAY: u32 = 16;
+pub const SDL_MEDIUM_DELAY: u32 = 32;
+pub const SDL_MAX_DELAY: u32 = 64;
+// ------------------------------------------------------------------------------------------------

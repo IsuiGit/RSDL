@@ -4,7 +4,7 @@ pub mod collider_ray;
 pub mod collider_collision;
 pub mod collider_consts;
 
-use std::time::{SystemTime, UNIX_EPOCH};
+use std::{ffi::c_void, time::{SystemTime, UNIX_EPOCH}};
 
 #[derive(Debug, Clone)]
 pub enum Direction {
@@ -29,13 +29,17 @@ pub struct Collider{
     pub color: (u8, u8, u8, u8),
     pub image: String,
     pub pos: [f32; 2],
+    pub ppos: [f32; 2],
     pub size: [f32; 2],
     pub velocity: f32,
-    pub state: State
+    pub state: State,
+    pub elapsed: f32,
+    pub speed: f32,
+    pub delay: u32
 }
 
 impl Collider{
-    pub fn new(type_: u32, span: u32, color: (u8, u8, u8, u8), image: &str, pos: [f32; 2], size: [f32; 2], velocity: f32) -> Self {
+    pub fn new(type_: u32, span: u32, color: (u8, u8, u8, u8), image: &str, pos: [f32; 2], size: [f32; 2], velocity: f32, delay: Option<u32>) -> Self {
         // Creates a new instance of the `Collider` struct.
         //
         // This function initializes a `Collider` object with the specified properties, including its
@@ -61,6 +65,10 @@ impl Collider{
         // The `pos` and `size` should be set according to the intended placement and dimensions of
         // the collider in the game world.
         // code -----------------------------------------------------------------------------------
+        let mut _delay = 0;
+        if delay.is_some(){
+            _delay = delay.unwrap();
+        }
         Self{
             type_: type_,
             timestamp: SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs(),
@@ -68,9 +76,13 @@ impl Collider{
             color: color,
             image: image.to_string(),
             pos: pos,
+            ppos: pos,
             size: size,
             velocity: velocity,
-            state: State::Stable
+            state: State::Stable,
+            elapsed: 0.0,
+            speed: 0.0,
+            delay: _delay
         }
         // ----------------------------------------------------------------------------------------
     }

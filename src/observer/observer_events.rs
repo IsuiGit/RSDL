@@ -157,6 +157,13 @@ impl Observer {
                 }
             }
         }
+
+        // Jump event
+        if let Some(&event) = self.keyboard.get(&OBSERVER_JUMP_EVENT){
+            if self.events.contains(&event){
+
+            }
+        }
         // ----------------------------------------------------------------------------------------
     }
 }

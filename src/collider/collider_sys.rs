@@ -1,4 +1,4 @@
-use crate::collider::Collider;
+use crate::collider::{Collider, State};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 impl Collider {
@@ -90,13 +90,27 @@ impl Collider {
         // system time is valid to avoid runtime panics.
         // code -----------------------------------------------------------------------------------
         self.timestamp = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
+        match self.ppos[0] != self.pos[0] || self.ppos[1] != self.pos[1]{
+            true => {
+                self.state = State::Moving;
+                self.speed = self.velocity / self.delay as f32;
+                self.elapsed += self.velocity / self.speed;
+            }
+            false => {
+                self.state = State::Stable;
+                self.speed = 0.0;
+                self.elapsed = 0.0;
+            }
+        }
+        self.ppos = self.pos;
         // ----------------------------------------------------------------------------------------
     }
     pub fn debug(&self) -> String {
         let debug_info = format!(
-            "Type: {}\nTimestamp: {}\nSpan: {}\nColor: ({},{},{},{})\nImage: {}\nPos: ({},{})\nSize: ({},{})\nVelocity: {}\nState: {:?}",
+            "Type: {}\nTimestamp: {}\nSpan: {}\nColor: ({},{},{},{})\nImage: {}\nPos: ({},{})\nPPos: ({}, {})\nSize: ({},{})\nVelocity: {}\nState: {:?}\nSpeed: {}\nElapsed (ms): {}\nDelay: {}",
             &self.type_, &self.timestamp, &self.span, &self.color.0, &self.color.1, &self.color.2, &self.color.3,
-            &self.image, &self.pos[0], &self.pos[1], &self.size[0], &self.size[1], &self.velocity, &self.state
+            &self.image, &self.pos[0], &self.pos[1], &self.ppos[0], &self.ppos[1], &self.size[0], &self.size[1],
+            &self.velocity, &self.state, &self.speed, &self.elapsed, &self.delay
         );
         debug_info
     }

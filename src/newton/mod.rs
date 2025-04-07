@@ -6,7 +6,7 @@ pub struct Newton{
 }
 
 impl Newton{
-    pub fn new(force: f32) -> Self{
-        Self{ force }
+    pub fn new() -> Self{
+        Self{ force: 9.81 }
     }
 }

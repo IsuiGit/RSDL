@@ -1,4 +1,5 @@
-use crate::collider::{Collider, Direction, State};
+use crate::collider::{Collider, Direction};
+use crate::newton::Newton;
 
 impl Collider{
     pub fn direction_move(&mut self, max: [f32; 2], direction: Direction) {

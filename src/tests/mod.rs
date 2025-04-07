@@ -1,16 +1,26 @@
 use crate::sdl3::{SDL3, sdl3_consts::*, sdl3_structs::*, sdl3_sys::{sdl3_poll_event, sdl3_delay}, sdl3_window::sdl3_get_window_size};
 use crate::collider::{Collider, collider_consts::*};
 use crate::artist::{Artist, artist_consts::*, artist_sys::*};
-use std::{collections::HashMap, mem::zeroed};
-use crate::observer::Observer;
+use crate::observer::{Observer, observer_consts::*};
 use crate::screenwriter::Scene;
 
+use std::{collections::HashMap, mem::zeroed};
+
 pub fn sdl3_main_test(){
+    let delay = SDL_MIN_DELAY;
     // Создаем экземпляр библиотек ----------------------------------------------------------------
     let mut sdl3 = SDL3::new();
     // --------------------------------------------------------------------------------------------
     // Создание "играбельного объекта"-------------------------------------------------------------
-    let playable = Collider::new(COLLIDER_PLAYABLE, ARTIST_IMAGE, (255, 255, 255, 255), "", [0.0, 1016.0], [64.0, 64.0], 5.0);
+    let playable = Collider::new(
+        COLLIDER_PLAYABLE,
+        ARTIST_IMAGE,
+        OBSERVER_COLOR_DEFAULT,
+        "C:\\Users\\Isui\\Desktop\\src\\Bobo.png",
+        [0.0, 1016.0],
+        [64.0, 64.0],
+        5.0, Some(SDL_MIN_DELAY)
+    );
     // --------------------------------------------------------------------------------------------
     // Создание структуры "наблюдателя", с содержимым в виде "играбельного" объекта, окружения
     // сцены, окна и настроек по умолчанию (default)-----------------------------------------------
@@ -19,9 +29,9 @@ pub fn sdl3_main_test(){
     // Создаем сцены игры -------------------------------------------------------------------------
     let scene_0 = Scene::new(
         vec![
-            Collider::new(COLLIDER_BLOCK, ARTIST_IMAGE, (172, 45, 112, 255), "", [400.0, 552.0], [200.0, 650.0], 0.0),
-            Collider::new(COLLIDER_BLOCK, ARTIST_IMAGE, (117, 45, 112, 255), "", [1111.0, 243.0], [200.0, 950.0], 0.0),
-            Collider::new(COLLIDER_BLOCK, ARTIST_IMAGE, (17, 145, 112, 255), "", [284.0, 650.0], [1300.0, 200.0], 0.0)
+            Collider::new(COLLIDER_BLOCK, ARTIST_IMAGE, OBSERVER_COLOR_DEFAULT, "", [400.0, 552.0], [200.0, 650.0], 0.0, None),
+            Collider::new(COLLIDER_BLOCK, ARTIST_IMAGE, OBSERVER_COLOR_DEFAULT, "", [1111.0, 243.0], [200.0, 950.0], 0.0, None),
+            Collider::new(COLLIDER_BLOCK, ARTIST_IMAGE, OBSERVER_COLOR_DEFAULT, "", [284.0, 650.0], [1300.0, 200.0], 0.0, None)
         ],
         1, (0, 0, 0, 255), String::from("Q to change scene\nWASD to move\nESC to exit"), [1670.0, 20.0]
     );
@@ -68,7 +78,7 @@ pub fn sdl3_main_test(){
             artist.drawing(&mut sdl3, observer.observer_to_artist_context());
             // ------------------------------------------------------------------------------------
             event.drop_fields();
-            sdl3_delay(&mut sdl3, 16);
+            sdl3_delay(&mut sdl3, delay);
         }
     }
     // --------------------------------------------------------------------------------------------
