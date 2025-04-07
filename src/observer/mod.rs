@@ -1,7 +1,7 @@
 use crate::collider::Collider;
 use crate::screenwriter::Scene;
 use crate::artist::ArtistCache;
-use std::{collections::{HashSet, HashMap}, ffi::c_void};
+use std::{collections::{HashSet, HashMap}, ffi::c_void, time::{SystemTime, UNIX_EPOCH}};
 use crate::sdl3::{
     SDL3,
     sdl3_window::{
@@ -27,6 +27,10 @@ pub mod observer_consts;
 
 #[derive(Debug)]
 pub struct Observer{
+    pub timestamp: u64,
+    pub elapsed: u64,
+    pub iters: u16,
+    pub fps: u16,
     pub playable: Collider,
     pub scenes: HashMap<u64, Scene>,
     pub current_scene: u64,
@@ -47,11 +51,12 @@ pub struct ObserverContext{
     pub text: String,
     pub point: [f32; 2],
     pub cache: ArtistCache,
-    pub debug: bool
+    pub debug: bool,
+    pub fps: u16
 }
 
 impl Observer {
-    pub fn new(sdl3: &mut SDL3, playable: Collider, scenes: HashMap<u64, Scene>, size: [f32; 2], iflags: u32, wflags: u64) -> Self {
+    pub fn new(sdl3: &mut SDL3, playable: Collider, scenes: HashMap<u64, Scene>, size: [f32; 2], iflags: u32, wflags: u64, title: &str) -> Self {
         // Creates a new instance of the `Observer` struct and initializes the SDL3 context.
         //
         // This function sets up the SDL3 environment, creates a window and a renderer, and initializes
@@ -95,12 +100,16 @@ impl Observer {
         sdl3_ttf_init(sdl3);
         let events: HashSet<u32> = HashSet::new();
         let keyboard: HashMap<u16, u32> = HashMap::new();
-        let window = sdl3_create_window(sdl3, "Movement Test App", size[0] as u32, size[1] as u32, wflags);
+        let window = sdl3_create_window(sdl3, title, size[0] as u32, size[1] as u32, wflags);
         if window.is_null(){sdl3_quit(sdl3); panic!("window pointer is null!");}
         let renderer = sdl3_create_renderer(sdl3, window, "");
         if renderer.is_null(){sdl3_destroy_window(sdl3, window); sdl3_quit(sdl3); panic!("renderer pointer is null!");}
         let cache = ArtistCache::new(sdl3, renderer, &playable, scenes.get(&0).unwrap().clone());
         Self {
+            timestamp: SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs(),
+            elapsed: SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs(),
+            iters: 0,
+            fps: 0,
             playable: playable,
             scenes: scenes,
             current_scene: 0,
@@ -177,7 +186,8 @@ impl Observer {
             text: self.scenes.get(&self.current_scene).unwrap().text.clone(),
             point: self.scenes.get(&self.current_scene).unwrap().point,
             cache: self.cache.clone(),
-            debug: self.debug
+            debug: self.debug,
+            fps: self.fps
         }
         // ----------------------------------------------------------------------------------------
     }

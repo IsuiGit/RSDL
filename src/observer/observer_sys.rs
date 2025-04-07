@@ -1,4 +1,5 @@
 use crate::observer::Observer;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 impl Observer{
     pub fn resize(&mut self, size: [f32; 2]){
@@ -64,6 +65,13 @@ impl Observer{
         self.playable.update();
         for obj in &mut self.scenes.get_mut(&self.current_scene).unwrap().objects{
             obj.update();
+        }
+        self.iters += 1;
+        self.timestamp = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
+        if self.timestamp - self.elapsed >= 1{
+            self.fps = self.iters;
+            self.elapsed = self.timestamp;
+            self.iters = 0;
         }
         // ----------------------------------------------------------------------------------------
     }

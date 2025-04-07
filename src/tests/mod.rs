@@ -38,11 +38,12 @@ pub fn sdl3_main_test(){
         scenes,
         [1920.0, 1080.0],
         SDL_INIT_VIDEO | SDL_INIT_AUDIO,
-        SDL_WINDOW_FULLSCREEN | SDL_WINDOW_OPENGL
+        SDL_WINDOW_FULLSCREEN | SDL_WINDOW_OPENGL,
+        "Main test"
     );
     // --------------------------------------------------------------------------------------------
     // Инициализируем стандартную клавиатуру
-    observer.default_keyboard();
+    observer.platformer_keyboard();
     // --------------------------------------------------------------------------------------------
     // Создание "художника" для отрисовки объектов ------------------------------------------------
     let artist = Artist::new(&mut sdl3, observer.renderer, "", 20.0);
