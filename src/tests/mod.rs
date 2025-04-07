@@ -1,6 +1,6 @@
 use crate::sdl3::{SDL3, sdl3_consts::*, sdl3_structs::*, sdl3_sys::{sdl3_poll_event, sdl3_delay}, sdl3_window::sdl3_get_window_size};
 use crate::collider::{Collider, collider_consts::*};
-use crate::artist::{Artist, artist_consts::*, artist_sys::*};
+use crate::artist::{Artist, artist_consts::*};
 use crate::observer::{Observer, observer_consts::*};
 use crate::screenwriter::Scene;
 

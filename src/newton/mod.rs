@@ -1,4 +1,3 @@
-use crate::collider::Collider;
 mod newton_gravity;
 
 pub struct Newton{

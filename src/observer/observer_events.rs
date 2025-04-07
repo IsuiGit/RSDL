@@ -1,5 +1,5 @@
 use crate::observer::{Observer, observer_consts::*};
-use crate::collider::{Collider, Direction, State, collider_consts::*};
+use crate::collider::{Collider, Direction, collider_consts::*};
 use crate::artist::ArtistCache;
 use crate::sdl3::{SDL3, sdl3_consts::*, sdl3_structs::SDL_Event, sdl3_sys::sdl3_push_event};
 use std::{mem::zeroed, thread, time::Duration};
