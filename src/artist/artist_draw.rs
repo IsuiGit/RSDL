@@ -43,10 +43,10 @@ impl Artist{
         // code -----------------------------------------------------------------------------------
         self.draw_objects(sdl3, context.renderer, &context.playable, &context.objects, context.background, context.cache);
         if context.text.len() != 0 {
-            self.draw_text(sdl3, context.renderer, context.text, context.point);
+            self.draw_text(sdl3, context.text, context.point);
         }
         if context.debug{
-            self.draw_debug_info(sdl3, &context.playable, context.renderer, context.fps);
+            self.draw_debug_info(sdl3, &context.playable, context.fps);
         }
         sdl3_render_present(sdl3, context.renderer);
         // ----------------------------------------------------------------------------------------
@@ -137,7 +137,7 @@ impl Artist{
         }
         // ----------------------------------------------------------------------------------------
     }
-    fn draw_text(&self, sdl3: &mut SDL3, renderer: *mut c_void, text: String, ptext: [f32; 2]) {
+    fn draw_text(&self, sdl3: &mut SDL3, text: String, ptext: [f32; 2]) {
         // Renders text on the screen using the SDL3 and TTF libraries.
         //
         // This function creates a text rendering engine, generates a texture from the provided text,
